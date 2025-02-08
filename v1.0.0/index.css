@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-width: fit-content;
+  /* outline: 1px solid red; */
+}
+
+:root {
+  --html-bgclr: #1e1e1e;
+  --html-clr: #e1e1e1;
+  --input-bgclr: #e1e1e1;
+  --input-clr: #000000;
+  --input-brdclr: #000000;
+  --btn-bgclr: hsl(0, 0%, 20%);
+  --btn-bgclr-hover: hsl(0, 0%, 40%);
+  --btn-bgclr-active: hsl(0, 0%, 30%);
+  --btn-clr: #ffffff;
+  --btn-brdclr: #000000;
+}
+
+html {
+  background-color: var(--html-bgclr);
+  color: var(--html-clr);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 1rem;
+}
+
+button {
+  background-color: var(--btn-bgclr);
+  border: 1px solid var(--btn-brdclr);
+  color: var(--btn-clr);
+  padding: 0.5rem;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--btn-bgclr-hover);
+}
+
+button:active {
+  background-color: var(--btn-bgclr-active);
+}
+
+input[type="text"] {
+  background-color: var(--input-bgclr);
+  color: var(--input-clr);
+  border: 1px solid var(--input-brdclr);
+  padding: 0.5rem;
+  border-radius: 0;
+}
+
+.form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form.vertical {
+  grid-auto-flow: row;
+}

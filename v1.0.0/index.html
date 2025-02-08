@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tHomePage</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="dbUtils.js"></script>
+  <script src="utils.js"></script>
+  <script src="index.js" defer></script>
+</head>
+<body>
+  <form class="form vertical" id="userForm" onsubmit="addUser(event)">
+    <input type="text" name="name" id="user.name" placeholder="Name">
+    <input type="text" name="email" id="user.email" placeholder="Email">
+    <button type="submit">Save</button>
+  </form>
+
+  <pre id="pre"></pre>
+</body>
+</html>
