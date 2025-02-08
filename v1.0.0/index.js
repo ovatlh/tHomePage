@@ -1,5 +1,16 @@
-async function renderData() {
-  await renderSiteList();
+async function siteDelete(id) {
+  id = Number(id);
+  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.SITE, id);
+
+  sweetalert2Utils.showDialog({
+    title: `¿Delete ${data.name}?`,
+    okText: "Delete",
+    fnOk: async () => {
+      await dbUtils.DeleteById(dbUtils.DB_TABLES.SITE, id);
+      sweetalert2Utils.showToast(`site ${data.name} deleted`);
+      await renderSiteList();
+    }
+  });
 }
 
 async function siteUpdate(formEvent) {
@@ -24,16 +35,31 @@ async function siteCreate(formEvent) {
   await renderSiteList();
 }
 
-async function renderSiteList() {
-  document.getElementById("site-item-list-container").innerHTML = "<h6>Loading...</h6>";
+async function showSiteUpdate(id) {
+  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.SITE, id);
+  let template = document.getElementById("templateFormSiteUpdate").innerHTML;
+  template = template.replace("'dataId'", data.id);
+  sweetalert2Utils.showModal("Edit site", template, () => {
+    utils.objectToForm("formSiteUpdate", data);
+  });
+}
 
-  await utils.asyncDelay(1);
+function showSiteCreate() {
+  const template = document.getElementById("templateFormSiteCreate").innerHTML;
+  sweetalert2Utils.showModal("Add new site", template);
+}
+
+async function renderSiteList() {
+  let siteHtml = "<h6>Loading...</h6>";
+  document.getElementById("site-item-list-container").innerHTML = siteHtml;
+
+  await utils.asyncDelay(0.5);
   let list = await dbUtils.ReadAll(dbUtils.DB_TABLES.SITE);
 
   if(list.length > 0) {
     // list = utils.sortByProperty(list, "dateTimeCreate");
     //https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://google.com&size=64
-    const siteListHTML = list.reduce((html, item) => {
+    siteHtml = list.reduce((html, item) => {
       let itemTitle = `${item.name}`;
       if(item.description.length > 0) {
         itemTitle += `: ${item.description}`;
@@ -51,26 +77,19 @@ async function renderSiteList() {
         </div>
       `;
     }, "");
-
-    document.getElementById("site-item-list-container").innerHTML = siteListHTML;
+  } else {
+    siteHtml = "<h6>No items<h6>";
   }
-}
 
-function showSiteCreate() {
-  const template = document.getElementById("templateFormSiteCreate");
-  sweetalert2Utils.showModal("Add new site", template.innerHTML);
-}
-
-async function showSiteUpdate(id) {
-  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.SITE, id);
-  const template = document.getElementById("templateFormSiteUpdate");
-  sweetalert2Utils.showModal("Edit site", template.innerHTML, () => {
-    utils.objectToForm("formSiteUpdate", data);
-  });
+  document.getElementById("site-item-list-container").innerHTML = siteHtml;
 }
 
 function focusSearch() {
   document.getElementById("search.page").focus();
+}
+
+async function renderData() {
+  await renderSiteList();
 }
 
 function init() {

@@ -213,15 +213,19 @@ var dbUtils =
 
     // Función para eliminar un registro (DELETE)
     function DeleteById(table, id) {
-      const transaction = db.transaction([table], "readwrite");
-      const store = transaction.objectStore(table);
-      const deleteRequest = store.delete(id);
-      deleteRequest.onsuccess = function (event) {
-        // console.log("data deleted", event);
-      };
-      deleteRequest.onerror = function (event) {
-        console.error("Error data deñete:", event);
-      };
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([table], "readwrite");
+        const store = transaction.objectStore(table);
+        const deleteRequest = store.delete(id);
+        
+        deleteRequest.onsuccess = function (event) {
+          resolve(event.target.result); // Resuelve la promesa (puede ser undefined)
+        };
+        
+        deleteRequest.onerror = function (event) {
+          reject(event.target.error);
+        };
+      });
     }
 
     return {

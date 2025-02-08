@@ -1,6 +1,10 @@
 var sweetalert2Utils =
   sweetalert2Utils ||
   (function () {
+    function close() {
+      Swal.close();
+    }
+
     function showModal(title = "", html = "", fnDidOpen = null) {
       Swal.fire({
         title: title,
@@ -25,13 +29,30 @@ var sweetalert2Utils =
       });
     }
 
-    function close() {
-      Swal.close();
+    function showDialog({
+      title = "", 
+      okText = "Ok", 
+      cancelText = "Cancel", 
+      fnOk = null
+    }) {
+      Swal.fire({
+        title: title,
+        showCancelButton: true,
+        confirmButtonText: okText,
+        cancelButtonText: cancelText,
+      }).then((result) => {
+        if(result.isConfirmed) {
+          if(fnOk) {
+            fnOk();
+          }
+        }
+      });
     }
 
     return {
       close,
       showModal,
       showToast,
+      showDialog,
     };
   })();

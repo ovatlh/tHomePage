@@ -17,7 +17,7 @@
 </head>
 <body>
   <template id="templateFormSiteCreate">
-    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)">
+    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)" autocomplete="off">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
       <input type="text" name="description" id="input.description" placeholder="Description">
@@ -29,7 +29,7 @@
     </form>
   </template>
   <template id="templateFormSiteUpdate">
-    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)">
+    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)" autocomplete="off">
       <input type="hidden" name="id" id="input.id" value="">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
@@ -37,6 +37,7 @@
       <input type="text" name="tags" id="input.tags" placeholder="Tags">
       <div class="form-actions">
         <button type="submit">Save</button>
+        <button type="button" onclick="siteDelete('dataId')">Delete</button>
         <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
       </div>
     </form>
