@@ -10,12 +10,46 @@
   <script src="index.js" defer></script>
 </head>
 <body>
-  <form class="form vertical" id="userForm" onsubmit="addUser(event)">
-    <input type="text" name="name" id="user.name" placeholder="Name">
-    <input type="text" name="email" id="user.email" placeholder="Email">
-    <button type="submit">Save</button>
-  </form>
+  <!-- <form id="siteCreateForm" class="form vertical" onsubmit="siteCreate(event)">
+    <input type="text" name="name" id="site.name" placeholder="Name" required>
+    <input type="text" name="url" id="site.url" placeholder="URL" required>
+    <input type="text" name="description" id="site.description" placeholder="Description">
+    <input type="text" name="tags" id="site.tags" placeholder="Tags">
+    <button type="submit">Create</button>
+  </form> -->
 
-  <pre id="pre"></pre>
+  <div class="grid-contaier search-page-container">
+    <div class="flex-container">
+      <h1 class="container-title">Search:</h1>
+      <input type="search" name="search" id="search.page" placeholder="Search">
+      <button>Settings</button>
+    </div>
+  </div>
+
+  <div class="grid-container row site-container">
+    <div class="flex-container">
+      <h1 class="container-title">Sites</h1>
+      <div class="actions-container grid-container col">
+        <input type="search" name="search" id="site.search" placeholder="Search">
+        <button>Add</button>
+      </div>
+    </div>
+    <div class="grid-container site-item-list" id="site-item-list-container">
+      <h6>No site items</h6>
+    </div>
+  </div>
+
+  <div class="grid-container row clock-container">
+    <div class="flex-container">
+      <h1 class="container-title">Clocks</h1>
+      <div class="actions-container grid-container col">
+        <input type="search" name="search" id="site.search" placeholder="Search">
+        <button>Add</button>
+      </div>
+    </div>
+    <div class="grid-container clock-item-list" id="clock-item-list-container">
+      <h6>No clock items</h6>
+    </div>
+  </div>
 </body>
 </html>

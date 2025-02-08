@@ -6,13 +6,19 @@ var dbUtils =
     const DB_NAME = "homepageDB";
     const DB_TABLES = {
       USER: "user",
+      SITE: "site",
     };
     const DB_TABLES_MODELS = [
       {
         name: DB_TABLES.USER,
         pk: "id",
-        columns: ["dateTimeCCreate", "name", "email"],
+        columns: ["dateTimeCreate", "name", "email"],
       },
+      {
+        name: DB_TABLES.SITE,
+        pk: "id",
+        columns: ["dateTimeCreate", "name", "url", "description", "tags"],
+      }
     ];
 
     //init db on v1
