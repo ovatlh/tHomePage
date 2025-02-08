@@ -5,20 +5,14 @@ var dbUtils =
     const DB_VERSION = 1;
     const DB_NAME = "homepageDB";
     const DB_TABLES = {
-      USER: "user",
       SITE: "site",
     };
     const DB_TABLES_MODELS = [
       {
-        name: DB_TABLES.USER,
-        pk: "id",
-        columns: ["dateTimeCreate", "name", "email"],
-      },
-      {
         name: DB_TABLES.SITE,
         pk: "id",
         columns: ["dateTimeCreate", "name", "url", "description", "tags"],
-      }
+      },
     ];
 
     //init db on v1
@@ -127,6 +121,120 @@ var dbUtils =
     };
 
     /* ====================================
+      Export/Import DB
+    ==================================== */
+
+    function exportIndexedDBToJSON() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onerror = (event) => {
+          console.error(event);
+          reject("Error al abrir la base de datos para exportar.");
+        };
+
+        request.onsuccess = (event) => {
+          const _db = event.target.result;
+          const storeNames = Array.from(_db.objectStoreNames);
+          const exportData = {};
+          let pendingStores = storeNames.length;
+
+          if (pendingStores === 0) {
+            resolve(JSON.stringify(exportData));
+            return;
+          }
+
+          storeNames.forEach((storeName) => {
+            const transaction = _db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            const items = [];
+            const cursorRequest = store.openCursor();
+
+            cursorRequest.onsuccess = (event) => {
+              const cursor = event.target.result;
+              if (cursor) {
+                items.push(cursor.value);
+                cursor.continue();
+              } else {
+                exportData[storeName] = items;
+                pendingStores--;
+                if (pendingStores === 0) {
+                  // Cuando ya se han leído todos los stores, se convierte el objeto a JSON
+                  resolve(JSON.stringify(exportData));
+                }
+              }
+            };
+
+            cursorRequest.onerror = (event) => {
+              console.error(event);
+              reject(`Error al leer el store ${storeName}`);
+            };
+          });
+        };
+      });
+    }
+
+    function importJSONToIndexedDB(jsonString) {
+      return new Promise((resolve, reject) => {
+        const importData = JSON.parse(jsonString);
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onerror = (event) => {
+          console.error(event);
+          reject("Error al abrir la base de datos para importar.");
+        };
+
+        // En onupgradeneeded, se crean los object stores que no existan
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          Object.keys(importData).forEach((storeName) => {
+            if (!db.objectStoreNames.contains(storeName)) {
+              // Se usa un keyPath por defecto; ajusta según tu modelo de datos
+              db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+            }
+          });
+        };
+
+        request.onsuccess = (event) => {
+          const db = event.target.result;
+          const storeNames = Object.keys(importData);
+          let pendingStores = storeNames.length;
+
+          if (pendingStores === 0) {
+            resolve();
+            return;
+          }
+
+          storeNames.forEach((storeName) => {
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+
+            // Opcional: limpiar datos previos antes de la importación
+            const clearRequest = store.clear();
+            clearRequest.onsuccess = () => {
+              // Agregar cada registro del JSON al store
+              importData[storeName].forEach((item) => {
+                store.put(item);
+              });
+            };
+
+            transaction.oncomplete = () => {
+              pendingStores--;
+              if (pendingStores === 0) {
+                resolve();
+              }
+            };
+
+            transaction.onerror = (event) => {
+              console.error(event);
+              reject(`Error al importar datos en el store ${storeName}`);
+            };
+          });
+        };
+      });
+    }
+
+    /* ====================================
       CRUD operations
     ==================================== */
 
@@ -136,11 +244,11 @@ var dbUtils =
         const transaction = db.transaction([table], "readwrite");
         const store = transaction.objectStore(table);
         const addRequest = store.add(data);
-    
+
         addRequest.onsuccess = function (event) {
           resolve(event.target.result); // Devuelve el ID generado
         };
-    
+
         addRequest.onerror = function (event) {
           reject(event.target.error); // Devuelve el error
         };
@@ -177,17 +285,17 @@ var dbUtils =
         // Se inicia una transacción en modo de solo lectura para el object store especificado
         const transaction = db.transaction([table], "readonly");
         const store = transaction.objectStore(table);
-        
+
         // Se solicita obtener el objeto con la clave proporcionada (id)
         const request = store.get(id);
-    
+
         // Si la operación es exitosa, se resuelve la Promise con el objeto obtenido
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
           resolve(event.target.result);
         };
-    
+
         // Si ocurre un error, se rechaza la Promise con el error
-        request.onerror = function(event) {
+        request.onerror = function (event) {
           console.error("Error read by id:", event);
           reject(event);
         };
@@ -200,12 +308,12 @@ var dbUtils =
         const transaction = db.transaction([table], "readwrite");
         const store = transaction.objectStore(table);
         const updateRequest = store.put(data);
-        
-        updateRequest.onsuccess = function(event) {
+
+        updateRequest.onsuccess = function (event) {
           resolve(event.target.result); // Resuelve con el resultado (puede ser el ID actualizado)
         };
-        
-        updateRequest.onerror = function(event) {
+
+        updateRequest.onerror = function (event) {
           reject(event.target.error); // Rechaza la promesa con el error
         };
       });
@@ -217,11 +325,11 @@ var dbUtils =
         const transaction = db.transaction([table], "readwrite");
         const store = transaction.objectStore(table);
         const deleteRequest = store.delete(id);
-        
+
         deleteRequest.onsuccess = function (event) {
           resolve(event.target.result); // Resuelve la promesa (puede ser undefined)
         };
-        
+
         deleteRequest.onerror = function (event) {
           reject(event.target.error);
         };
@@ -233,10 +341,12 @@ var dbUtils =
       DB_NAME,
       DB_TABLES,
       DB_TABLES_MODELS,
+      exportIndexedDBToJSON,
+      importJSONToIndexedDB,
       Create,
       ReadAll,
       ReadById,
       Update,
-      DeleteById
+      DeleteById,
     };
   })();

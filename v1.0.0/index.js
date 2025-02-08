@@ -1,3 +1,41 @@
+async function downloadDB() {
+  const json = await dbUtils.exportIndexedDBToJSON();
+  const fileName = `${dbUtils.DB_NAME}.${Date.now()}.json`;
+  console.log(fileName);
+  utils.downloadJSON(json, fileName);
+}
+
+async function importDB() {
+  const input = document.getElementById("settings.importdb");
+  const file = input.files[0];
+  if(!file) {
+    sweetalert2Utils.showToast("Select json file");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      const json = e.target.result;
+      await dbUtils.importJSONToIndexedDB(json);
+      await renderData();
+      sweetalert2Utils.showToast("data imported");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  reader.readAsText(file);
+}
+
+async function showSettings() {
+  const template = document.getElementById("templateFormSettings").innerHTML;
+  sweetalert2Utils.showModal("Settings", template);
+}
+
+function settings(formEvent) {
+  formEvent.preventDefault();
+}
+
 async function siteDelete(id) {
   id = Number(id);
   const data = await dbUtils.ReadById(dbUtils.DB_TABLES.SITE, id);

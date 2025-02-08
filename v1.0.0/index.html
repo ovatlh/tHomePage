@@ -16,6 +16,15 @@
   <script src="index.js" defer></script>
 </head>
 <body>
+  <template id="templateFormSettings">
+    <form id="formSettings" class="form vertical" onsubmit="settings(event)">
+      <button type="button" onclick="downloadDB()">Export DB</button>
+      <input type="file" id="settings.importdb" accept=".json">
+      <button type="button" onclick="importDB()">Import DB</button>
+      <button type="button" onclick="sweetalert2Utils.close()">Close</button>
+    </form>
+  </template>
+
   <template id="templateFormSiteCreate">
     <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)" autocomplete="off">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
@@ -47,7 +56,7 @@
     <div class="flex-container">
       <h1 class="container-title">Search:</h1>
       <input type="search" name="search" id="search.page" placeholder="Search">
-      <button>Settings</button>
+      <button onclick="showSettings()">Settings</button>
     </div>
   </div>
 
