@@ -5,18 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tHomePage</title>
   <link rel="stylesheet" href="index.css">
-  <script src="dbUtils.js"></script>
-  <script src="utils.js"></script>
+  <link rel="stylesheet" href="../libs/sweetalert2-v11.16.0/sweetalert2.min.css">
+  
+  <script src="../libs/sweetalert2-v11.16.0/sweetalert2.all.min.js"></script>
+
+  <script src="../libs/utils/sweetalert2Utils.js"></script>
+  <script src="../libs/utils/dbUtils.js"></script>
+  <script src="../libs/utils/utils.js"></script>
+
   <script src="index.js" defer></script>
 </head>
 <body>
-  <!-- <form id="siteCreateForm" class="form vertical" onsubmit="siteCreate(event)">
-    <input type="text" name="name" id="site.name" placeholder="Name" required>
-    <input type="text" name="url" id="site.url" placeholder="URL" required>
-    <input type="text" name="description" id="site.description" placeholder="Description">
-    <input type="text" name="tags" id="site.tags" placeholder="Tags">
-    <button type="submit">Create</button>
-  </form> -->
+  <template id="templateFormSiteCreate">
+    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <div class="form-actions">
+        <button type="submit">Create</button>
+        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <template id="templateFormSiteUpdate">
+    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)">
+      <input type="hidden" name="id" id="input.id" value="">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <div class="form-actions">
+        <button type="submit">Save</button>
+        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      </div>
+    </form>
+  </template>
 
   <div class="grid-contaier search-page-container">
     <div class="flex-container">
@@ -29,10 +53,9 @@
   <div class="grid-container row site-container">
     <div class="flex-container">
       <h1 class="container-title">Sites</h1>
-      <div class="actions-container grid-container col">
-        <input type="search" name="search" id="site.search" placeholder="Search">
-        <button>Add</button>
-      </div>
+      <input type="search" name="search" id="site.search" placeholder="Search">
+      <button title="toggle">open on new tab</button>
+      <button onclick="showSiteCreate()">Add</button>
     </div>
     <div class="grid-container site-item-list" id="site-item-list-container">
       <h6>No site items</h6>

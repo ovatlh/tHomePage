@@ -5,8 +5,21 @@ var utils =
       return Object.fromEntries(new FormData(formElement));
     }
 
-    function objectToForm(formElement, data) {
-      //TODO set values on html inputs
+    function objectToForm(formId, data) {
+      const form = document.getElementById(formId);
+
+      if(!form) {
+        return;
+      }
+
+      for (const key in data) {
+        if(data.hasOwnProperty(key)) {
+          const input = form.querySelector(`[id="input.${key}"]`);
+          if(input) {
+            input.value = data[key];
+          }
+        }
+      }
     }
 
     function sortByProperty(arr, property, order = "desc") {
@@ -27,9 +40,19 @@ var utils =
       });
     }
 
+    async function asyncDelay(seconds = 0) {
+      const ms = 1000;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, ms * seconds);
+      });
+    }
+
     return {
       formToObject,
       objectToForm,
       sortByProperty,
+      asyncDelay,
     };
   })();

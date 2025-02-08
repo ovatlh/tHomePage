@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  min-width: fit-content;
   /* outline: 1px solid red; */
 }
 
@@ -38,6 +37,11 @@
   --clock-container-gap: 1rem;
 }
 
+.swal2-popup {
+  width: 100%;
+  max-width: 50ch;
+}
+
 html {
   background-color: var(--html-bgclr);
   color: var(--html-clr);
@@ -63,6 +67,7 @@ button {
   padding: 0.5rem;
   border-radius: 0;
   cursor: pointer;
+  min-width: fit-content;
 }
 
 button:hover {
@@ -80,6 +85,7 @@ input[type="search"] {
   border: 1px solid var(--input-brdclr);
   padding: 0.5rem;
   border-radius: 0;
+  width: 100%;
 }
 
 .form {
@@ -89,6 +95,12 @@ input[type="search"] {
 
 .form.vertical {
   grid-auto-flow: row;
+}
+
+.form-actions {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.5rem;
 }
 
 .container-title {
@@ -116,19 +128,10 @@ input[type="search"] {
   display: flex;
   gap: 1rem;
   align-items: center;
-  justify-content: space-between;
 }
 
 .search-page-container {
   grid-area: SEARCH;
-}
-
-.search-page-container .flex-container {
-  justify-content: start;
-}
-
-.search-page-container .flex-container input {
-  width: 100%;
 }
 
 .site-container {
@@ -157,14 +160,21 @@ input[type="search"] {
   width: var(--site-item-width);
   height: var(--site-item-width);
   aspect-ratio: 1/1;
-  display: grid;
-  grid-auto-flow: row;
-  grid-template-rows: 1fr auto;
-  text-decoration: none;
-  padding: 0.5rem;
   border-radius: 0.5rem;
   gap: 0.5rem;
+  position: relative;
   transition: 0.1s ease-out scale, background-color;
+}
+
+.site-item a {
+  z-index: 1;
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: 4.5rem 1rem;
+  text-decoration: none;
+  padding: 0.5rem;
+  height: 100%;
+  align-content: space-between;
 }
 
 .site-item img {
@@ -177,14 +187,38 @@ input[type="search"] {
 
 .site-item p {
   font-size: var(--site-item-fontsize);
+  line-height: var(--site-item-fontsize);
+  max-lines: 1;
   text-align: center;
   color: var(--site-clr);
   word-break: break-all;
   font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.site-item button {
+  z-index: 2;
+  position: absolute;
+  right: -10%;
+  top: -10%;
+  display: none;
 }
 
 .site-item:hover,
 .site-item:focus {
   background-color: var(--site-bgclr-hover);
   scale: 1.1;
+}
+
+.site-item:hover button,
+.site-item:focus button {
+  display: block;
+}
+
+.clock-item-list {
+  height: var(--site-item-list-height);
+  overflow-y: scroll;
+  overflow-x: hidden;
 }

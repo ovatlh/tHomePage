@@ -131,20 +131,24 @@ var dbUtils =
     ==================================== */
 
     // Función para agregar registro (CREATE)
-    function fnCreate(table, data) {
-      const transaction = db.transaction([table], "readwrite");
-      const store = transaction.objectStore(table);
-      const addRequest = store.add(data);
-      addRequest.onsuccess = function (event) {
-        // console.log("data added:", event.target.result, data);
-      };
-      addRequest.onerror = function (event) {
-        console.error("Error data added:", event);
-      };
+    function Create(table, data) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([table], "readwrite");
+        const store = transaction.objectStore(table);
+        const addRequest = store.add(data);
+    
+        addRequest.onsuccess = function (event) {
+          resolve(event.target.result); // Devuelve el ID generado
+        };
+    
+        addRequest.onerror = function (event) {
+          reject(event.target.error); // Devuelve el error
+        };
+      });
     }
 
     // Función para obtener y mostrar todos los usuarios (READ)
-    function fnReadAll(table) {
+    function ReadAll(table) {
       return new Promise((resolve, reject) => {
         const transaction = db.transaction([table], "readonly");
         const store = transaction.objectStore(table);
@@ -168,21 +172,47 @@ var dbUtils =
       });
     }
 
+    function ReadById(table, id) {
+      return new Promise((resolve, reject) => {
+        // Se inicia una transacción en modo de solo lectura para el object store especificado
+        const transaction = db.transaction([table], "readonly");
+        const store = transaction.objectStore(table);
+        
+        // Se solicita obtener el objeto con la clave proporcionada (id)
+        const request = store.get(id);
+    
+        // Si la operación es exitosa, se resuelve la Promise con el objeto obtenido
+        request.onsuccess = function(event) {
+          resolve(event.target.result);
+        };
+    
+        // Si ocurre un error, se rechaza la Promise con el error
+        request.onerror = function(event) {
+          console.error("Error read by id:", event);
+          reject(event);
+        };
+      });
+    }
+
     // Función para actualizar un registro (UPDATE)
-    function fnUpdate(table, data) {
-      const transaction = db.transaction([table], "readwrite");
-      const store = transaction.objectStore(table);
-      const updateRequest = store.put(data);
-      updateRequest.onsuccess = function (event) {
-        // console.log("data updated", event);
-      };
-      updateRequest.onerror = function (event) {
-        console.error("Error data updated:", event);
-      };
+    function Update(table, data) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([table], "readwrite");
+        const store = transaction.objectStore(table);
+        const updateRequest = store.put(data);
+        
+        updateRequest.onsuccess = function(event) {
+          resolve(event.target.result); // Resuelve con el resultado (puede ser el ID actualizado)
+        };
+        
+        updateRequest.onerror = function(event) {
+          reject(event.target.error); // Rechaza la promesa con el error
+        };
+      });
     }
 
     // Función para eliminar un registro (DELETE)
-    function fnDeleteById(table, id) {
+    function DeleteById(table, id) {
       const transaction = db.transaction([table], "readwrite");
       const store = transaction.objectStore(table);
       const deleteRequest = store.delete(id);
@@ -199,9 +229,10 @@ var dbUtils =
       DB_NAME,
       DB_TABLES,
       DB_TABLES_MODELS,
-      fnCreate,
-      fnReadAll,
-      fnUpdate,
-      fnDeleteById
+      Create,
+      ReadAll,
+      ReadById,
+      Update,
+      DeleteById
     };
   })();
