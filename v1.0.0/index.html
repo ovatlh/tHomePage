@@ -17,7 +17,7 @@
 </head>
 <body>
   <template id="templateFormSettings">
-    <form id="formSettings" class="form vertical" onsubmit="settings(event)">
+    <form id="formSettings" class="form vertical" onsubmit="settings(event)" autofocus="false">
       <button type="button" onclick="downloadDB()">Export DB</button>
       <input type="file" id="settings.importdb" accept=".json">
       <button type="button" onclick="importDB()">Import DB</button>
@@ -26,7 +26,7 @@
   </template>
 
   <template id="templateFormSiteCreate">
-    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)" autocomplete="off">
+    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)" autocomplete="off" autofocus="false">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
       <input type="text" name="description" id="input.description" placeholder="Description">
@@ -38,7 +38,7 @@
     </form>
   </template>
   <template id="templateFormSiteUpdate">
-    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)" autocomplete="off">
+    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)" autocomplete="off" autofocus="false">
       <input type="hidden" name="id" id="input.id" value="">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
