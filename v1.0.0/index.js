@@ -39,6 +39,25 @@ function settings(formEvent) {
   formEvent.preventDefault();
 }
 
+async function searchOnPage(value = "") {
+  const engine = "https://www.google.com/search?q=";
+  const searchURL = engine + encodeURIComponent(value);
+  const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
+  if(!settings && settings.typeOpenTab == "new-tab") {
+    window.open(searchURL, "_blank");
+  }
+
+  window.location.href = searchURL;
+}
+
+async function initSearchOnPage() {
+  const input = document.getElementById("search.page");
+  input.addEventListener("search", function() {
+    const value = input.value.trim();
+    searchOnPage(value);
+  });
+}
+
 async function renderClockList(list = []) {
   let clockHtml = "<h6>Loading...</h6>";
   document.getElementById("clock-item-list-container").innerHTML = clockHtml;
@@ -300,6 +319,7 @@ async function init() {
   await filterClockList();
   await initFilterSiteList();
   await initFilterClockList();
+  await initSearchOnPage();
 }
 
 init();
