@@ -16,7 +16,11 @@ var utils =
         if (data.hasOwnProperty(key)) {
           const input = form.querySelector(`[id="input.${key}"]`);
           if (input) {
-            input.value = data[key];
+            if(input.type == "checkbox") {
+              input.checked = data[key];
+            } else {
+              input.value = data[key];
+            }
           }
         }
       }
@@ -67,11 +71,26 @@ var utils =
       URL.revokeObjectURL(url);
     }
 
+    function timeWithUTC(utc = 0, isFormat24H = false) {
+      const time = new Date();
+      const timeUTC = new Date(time.getTime() + time.getTimezoneOffset() * 60 * 1000);
+      const timeResult = new Date(timeUTC.getTime() + utc * 60 * 60 * 1000);
+      const format = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: !isFormat24H,
+      };
+      const timeFormated = timeResult.toLocaleTimeString(undefined, format);
+      return timeFormated;
+    }
+
     return {
       formToObject,
       objectToForm,
       sortByProperty,
       asyncDelay,
-      downloadJSON
+      downloadJSON,
+      timeWithUTC
     };
   })();

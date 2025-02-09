@@ -52,6 +52,36 @@
     </form>
   </template>
 
+  <template id="templateFormClockCreate">
+    <form id="formClockCreate" class="form vertical" onsubmit="clockCreate(event)" autocomplete="off" autofocus="false">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="number" name="utc" id="input.utc" placeholder="UTC" required>
+      <label class="label-checkbox" for="input.format24H">
+        <input type="checkbox" name="format24H" id="input.format24H">
+        <p>24H</p>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Create</button>
+        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <template id="templateFormClockUpdate">
+    <form id="formClockUpdate" class="form vertical" onsubmit="clockUpdate(event)" autocomplete="off" autofocus="false">
+      <input type="hidden" name="id" id="input.id" value=""><input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="number" name="utc" id="input.utc" placeholder="UTC" required>
+      <label class="label-checkbox" for="input.format24H">
+        <input type="checkbox" name="format24H" id="input.format24H">
+        <p>24H</p>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Save</button>
+        <button type="button" onclick="clockDelete('dataId')">Delete</button>
+        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      </div>
+    </form>
+  </template>
+
   <div class="grid-contaier search-page-container">
     <div class="flex-container">
       <h1 class="container-title">Search</h1>
@@ -75,8 +105,8 @@
   <div class="grid-container row clock-container">
     <div class="flex-container">
       <h1 class="container-title">Clocks</h1>
-      <input type="search" name="search" id="site.search" placeholder="Search">
-      <button>Add</button>
+      <input type="search" name="search" id="clock.search" placeholder="Search">
+      <button onclick="showClockCreate()">Add</button>
     </div>
     <div class="grid-container clock-item-list" id="clock-item-list-container">
       <h6>Loading</h6>

@@ -1,4 +1,6 @@
 let timerFilterSiteList;
+let timerFilterClockList;
+let timerClockList;
 
 async function downloadDB() {
   const json = await dbUtils.exportIndexedDBToJSON();
@@ -35,6 +37,102 @@ async function showSettings() {
 
 function settings(formEvent) {
   formEvent.preventDefault();
+}
+
+async function renderClockList(list = []) {
+  let clockHtml = "<h6>Loading...</h6>";
+  document.getElementById("clock-item-list-container").innerHTML = clockHtml;
+
+  if(list.length > 0) {
+    clockHtml = list.reduce((html, item) => {
+      const timeResult = utils.timeWithUTC(item.utc, item.format24H);
+      return (
+        html +
+        `
+        <div class="clock-item">
+          <p class="time">${timeResult}</p>
+          <p class="name">${item.name}</p>
+          <button onclick="showClockUpdate(${item.id})">Edit</button>
+        </div>
+        `
+      );
+    }, "");
+  } else {
+    clockHtml = "<h6>No items<h6>";
+  }
+
+  document.getElementById("clock-item-list-container").innerHTML = clockHtml;
+}
+
+async function filterClockList() {
+  const input = document.getElementById("clock.search");
+  const filter = input.value.trim();
+  let list = [];
+  if(filter.length > 0) {
+    list = await dbUtils.ReadAll(dbUtils.DB_TABLES.CLOCK, filter);
+  } else {
+    list = await dbUtils.ReadAll(dbUtils.DB_TABLES.CLOCK);
+  }
+  await renderClockList(list);
+}
+
+async function initFilterClockList() {
+  timerClockList = setInterval(async () => {
+    await filterClockList();
+  }, 1000 * 0.3);
+}
+
+async function clockDelete(id) {
+  id = Number(id);
+  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.CLOCK, id);
+
+  sweetalert2Utils.showDialog({
+    title: `¿Delete ${data.name}?`,
+    okText: "Delete",
+    fnOk: async () => {
+      await dbUtils.DeleteById(dbUtils.DB_TABLES.CLOCK, id);
+      sweetalert2Utils.showToast(`clock ${data.name} deleted`);
+    },
+  });
+}
+
+async function clockUpdate(formEvent) {
+  formEvent.preventDefault();
+  const data = utils.formToObject(formEvent.srcElement);
+  const inputFormat24H = formEvent.srcElement.querySelector(`[id="input.format24H"]`);
+  data.format24H = inputFormat24H.checked;
+  data.id = Number(data.id);
+
+  await dbUtils.Update(dbUtils.DB_TABLES.CLOCK, data);
+  sweetalert2Utils.close();
+  sweetalert2Utils.showToast("clock updated");
+}
+
+async function clockCreate(formEvent) {
+  formEvent.preventDefault();
+  let data = utils.formToObject(formEvent.srcElement);
+  const inputFormat24H = formEvent.srcElement.querySelector(`[id="input.format24H"]`);
+  data.format24H = inputFormat24H.checked;
+  data.dateTimeCreate = Date.now();
+
+  await dbUtils.Create(dbUtils.DB_TABLES.CLOCK, data);
+  sweetalert2Utils.close();
+  sweetalert2Utils.showToast("clock created");
+  await filterClockList();
+}
+
+async function showClockUpdate(id) {
+  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.CLOCK, id);
+  let template = document.getElementById("templateFormClockUpdate").innerHTML;
+  template = template.replace("'dataId'", data.id);
+  sweetalert2Utils.showModal("Edit clock", template, () => {
+    utils.objectToForm("formClockUpdate", data);
+  });
+}
+
+async function showClockCreate() {
+  const template = document.getElementById("templateFormClockCreate").innerHTML;
+  sweetalert2Utils.showModal("Add new clock", template);
 }
 
 async function siteDelete(id) {
@@ -199,7 +297,9 @@ async function init() {
   await utils.asyncDelay(0.5);
   await initTypeOpenTab();
   await filterSiteList();
+  await filterClockList();
   await initFilterSiteList();
+  await initFilterClockList();
 }
 
 init();

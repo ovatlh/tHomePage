@@ -7,6 +7,7 @@ var dbUtils =
     const DB_TABLES = {
       SETTINGS: "settings",
       SITE: "site",
+      CLOCK: "clock",
     };
     const DB_TABLES_MODELS = [
       {
@@ -18,6 +19,11 @@ var dbUtils =
         name: DB_TABLES.SITE,
         pk: "id",
         columns: ["dateTimeCreate", "name", "url", "description", "tags"],
+      },
+      {
+        name: DB_TABLES.CLOCK,
+        pk: "id",
+        columns: ["dateTimeCreate", "name", "utc", "format24H"],
       },
     ];
 

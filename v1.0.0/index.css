@@ -79,8 +79,7 @@ button:active {
   background-color: var(--btn-bgclr-active);
 }
 
-input[type="text"],
-input[type="search"] {
+input {
   background-color: var(--input-bgclr);
   color: var(--input-clr);
   border: 1px solid var(--input-brdclr);
@@ -88,6 +87,25 @@ input[type="search"] {
   font-size: 1rem;
   border-radius: 0;
   width: 100%;
+}
+
+input[type="checkbox"] {
+  width: initial;
+  scale: 2;
+}
+
+.label-checkbox {
+  font-size: 1.5em;
+  display: grid;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  grid-auto-flow: column;
+  text-align: start;
+  grid-template-columns: auto 1fr;
+  background-color: var(--input-bgclr);
+  color: var(--input-clr);
+  border: 1px solid var(--input-brdclr);
+  cursor: pointer;
 }
 
 .form {
@@ -199,8 +217,8 @@ input[type="search"] {
 .site-item button {
   z-index: 2;
   position: absolute;
-  right: -10%;
-  top: -10%;
+  right: -0.5rem;
+  top: -0.5rem;
   display: none;
 }
 
@@ -221,8 +239,44 @@ input[type="search"] {
 
 .clock-item-list {
   height: var(--site-item-list-height);
+  gap: 1rem;
+  padding: 1rem;
   overflow-y: scroll;
   overflow-x: hidden;
+  align-content: start;
+}
+
+.clock-item {
+  display: grid;
+  grid-auto-flow: row;
+  background-color: hsl(0, 0%, 15%);
+  color: #e1e1e1;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.clock-item .time {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.clock-item .name {
+  font-size: 1rem;
+  text-align: end;
+}
+
+.clock-item button {
+  z-index: 2;
+  position: absolute;
+  right: -0.5rem;
+  top: -0.5rem;
+  display: none;
+}
+
+.clock-item:hover button,
+.clock-item:focus button {
+  display: block;
 }
 
 @media (max-width: 50rem) {
@@ -246,7 +300,12 @@ input[type="search"] {
     max-width: 90%;
   }
 
-  .site-item button {
+  .clock-item-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .site-item button,
+  .clock-item button {
     display: block;
   }
 }
