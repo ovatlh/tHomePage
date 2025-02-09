@@ -5,9 +5,15 @@ var dbUtils =
     const DB_VERSION = 1;
     const DB_NAME = "homepageDB";
     const DB_TABLES = {
+      SETTINGS: "settings",
       SITE: "site",
     };
     const DB_TABLES_MODELS = [
+      {
+        name: DB_TABLES.SETTINGS,
+        pk: "id",
+        columns: ["dateTimeCreate", "typeOpenTab"],
+      },
       {
         name: DB_TABLES.SITE,
         pk: "id",
@@ -250,13 +256,15 @@ var dbUtils =
         };
 
         addRequest.onerror = function (event) {
-          reject(event.target.error); // Devuelve el error
+          console.error(event);
+          // reject(event.target.error); // Devuelve el error
+          resolve(null);
         };
       });
     }
 
     // Función para obtener y mostrar todos los usuarios (READ)
-    function ReadAll(table) {
+    function ReadAll(table, filterText = "") {
       return new Promise((resolve, reject) => {
         const transaction = db.transaction([table], "readonly");
         const store = transaction.objectStore(table);
@@ -266,7 +274,15 @@ var dbUtils =
         cursorRequest.onsuccess = function (event) {
           const cursor = event.target.result;
           if (cursor) {
-            values.push(cursor.value);
+            const record = cursor.value;
+            const containsFilterText = Object.values(record).some(
+              (value) =>
+              typeof value === "string" &&
+              value.toLowerCase().includes(filterText.toLowerCase())
+            );
+            if(containsFilterText){
+              values.push(record);
+            }
             cursor.continue();
           } else {
             resolve(values);
@@ -275,7 +291,8 @@ var dbUtils =
 
         cursorRequest.onerror = function (event) {
           console.error("Error read all:", event);
-          reject(event);
+          // reject(event);
+          resolve(values);
         };
       });
     }
@@ -297,7 +314,8 @@ var dbUtils =
         // Si ocurre un error, se rechaza la Promise con el error
         request.onerror = function (event) {
           console.error("Error read by id:", event);
-          reject(event);
+          // reject(event);
+          resolve(null);
         };
       });
     }

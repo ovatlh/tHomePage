@@ -64,11 +64,11 @@
     <div class="flex-container">
       <h1 class="container-title">Sites</h1>
       <input type="search" name="search" id="site.search" placeholder="Search">
-      <button title="toggle">open on new tab</button>
+      <button id="btnTypeOpenTab" title="toggle" onclick="toggleTypeOpenTab()">open on: loading</button>
       <button onclick="showSiteCreate()">Add</button>
     </div>
     <div class="grid-container site-item-list" id="site-item-list-container">
-      <h6>No site items</h6>
+      <h6>Loading</h6>
     </div>
   </div>
 
@@ -79,7 +79,7 @@
       <button>Add</button>
     </div>
     <div class="grid-container clock-item-list" id="clock-item-list-container">
-      <h6>No clock items</h6>
+      <h6>Loading</h6>
     </div>
   </div>
 </body>
