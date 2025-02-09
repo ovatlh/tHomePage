@@ -19,7 +19,7 @@ async function importDB() {
     try {
       const json = e.target.result;
       await dbUtils.importJSONToIndexedDB(json);
-      await renderSiteList();
+      await filterSiteList();
       sweetalert2Utils.showToast("data imported");
     } catch (error) {
       console.error(error);
@@ -47,7 +47,7 @@ async function siteDelete(id) {
     fnOk: async () => {
       await dbUtils.DeleteById(dbUtils.DB_TABLES.SITE, id);
       sweetalert2Utils.showToast(`site ${data.name} deleted`);
-      await renderSiteList();
+      await filterSiteList();
     },
   });
 }
@@ -60,7 +60,7 @@ async function siteUpdate(formEvent) {
   await dbUtils.Update(dbUtils.DB_TABLES.SITE, data);
   sweetalert2Utils.close();
   sweetalert2Utils.showToast("site updated");
-  await renderSiteList();
+  await filterSiteList();
 }
 
 async function siteCreate(formEvent) {
@@ -71,7 +71,7 @@ async function siteCreate(formEvent) {
   await dbUtils.Create(dbUtils.DB_TABLES.SITE, data);
   sweetalert2Utils.close();
   sweetalert2Utils.showToast("site created");
-  await renderSiteList();
+  await filterSiteList();
 }
 
 async function showSiteUpdate(id) {
