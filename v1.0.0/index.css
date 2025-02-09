@@ -6,7 +6,7 @@
 }
 
 :root {
-  --html-bgclr: #1e1e1e;
+  --html-bgclr: hsl(0, 0%, 6%);
   --html-clr: #e1e1e1;
   --input-bgclr: #e1e1e1;
   --input-clr: #000000;
