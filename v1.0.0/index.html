@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tHomePage</title>
-  <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="../libs/sweetalert2-v11.16.0/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="index.css">
   
   <script src="../libs/sweetalert2-v11.16.0/sweetalert2.all.min.js"></script>
 
@@ -17,22 +18,22 @@
 </head>
 <body>
   <template id="templateFormSettings">
-    <form id="formSettings" class="form vertical" onsubmit="settings(event)" autocomplete="off" autofocus="false">
-      <button type="button" onclick="downloadDB()">Export DB</button>
+    <form id="formSettings" class="grid vertical" onsubmit="settings(event)" autocomplete="off" autofocus="false">
+      <button class="btn" type="button" onclick="downloadDB()">Export DB</button>
       <input type="file" id="settings.importdb" accept=".json">
-      <button type="button" onclick="importDB()">Import DB</button>
-      <button type="button" onclick="showSearchEngines()">Search engines</button>
+      <button class="btn" type="button" onclick="importDB()">Import DB</button>
+      <button class="btn" type="button" onclick="showSearchEngines()">Search engines</button>
       <a href="https://github.com/ovatlh/tHomePage">Github repository</a>
-      <button type="button" onclick="sweetalert2Utils.close()">Close</button>
+      <button class="btn" type="button" onclick="sweetalert2Utils.close()">Close</button>
     </form>
   </template>
 
   <template id="templateFormSearchEngine">
     <div class="grid-container">
-      <form id="formSearchEngine" class="form vertical" onsubmit="searchEngine(event)" autocomplete="off" autofocus="false">
+      <form id="formSearchEngine" class="grid vertical" onsubmit="searchEngine(event)" autocomplete="off" autofocus="false">
         <input type="text" name="name" id="input.name" placeholder="Name" required>
         <input type="text" name="url" id="input.url" placeholder="URL" required>
-        <button type="submit">Create</button>
+        <button class="btn" type="submit">Create</button>
         <div class="search-engine-list-container" id="search-engine-list-container">
           <h6>Loading</h6>
         </div>
@@ -41,95 +42,102 @@
   </template>
 
   <template id="templateFormSiteCreate">
-    <form id="formSiteCreate" class="form vertical" onsubmit="siteCreate(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteCreate" class="grid vertical" onsubmit="siteCreate(event)" autocomplete="off" autofocus="false">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
       <input type="text" name="description" id="input.description" placeholder="Description">
       <input type="text" name="tags" id="input.tags" placeholder="Tags">
-      <div class="form-actions">
-        <button type="submit">Create</button>
-        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      <div class="grid horizontal">
+        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="sweetalert2Utils.close()">Cancel</button>
       </div>
     </form>
   </template>
   <template id="templateFormSiteUpdate">
-    <form id="formSiteUpdate" class="form vertical" onsubmit="siteUpdate(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteUpdate" class="grid vertical" onsubmit="siteUpdate(event)" autocomplete="off" autofocus="false">
       <input type="hidden" name="id" id="input.id" value="">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
       <input type="text" name="description" id="input.description" placeholder="Description">
       <input type="text" name="tags" id="input.tags" placeholder="Tags">
-      <div class="form-actions">
-        <button type="submit">Save</button>
-        <button type="button" onclick="siteDelete('dataId')">Delete</button>
-        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      <div class="grid horizontal">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" onclick="siteDelete('dataId')">Delete</button>
+        <button class="btn" type="button" onclick="sweetalert2Utils.close()">Cancel</button>
       </div>
     </form>
   </template>
 
   <template id="templateFormClockCreate">
-    <form id="formClockCreate" class="form vertical" onsubmit="clockCreate(event)" autocomplete="off" autofocus="false">
+    <form id="formClockCreate" class="grid vertical" onsubmit="clockCreate(event)" autocomplete="off" autofocus="false">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="number" name="utc" id="input.utc" placeholder="UTC" required>
       <label class="label-checkbox" for="input.format24H">
         <input type="checkbox" name="format24H" id="input.format24H">
         <p>24H</p>
       </label>
-      <div class="form-actions">
-        <button type="submit">Create</button>
-        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      <div class="grid horizontal">
+        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="sweetalert2Utils.close()">Cancel</button>
       </div>
     </form>
   </template>
   <template id="templateFormClockUpdate">
-    <form id="formClockUpdate" class="form vertical" onsubmit="clockUpdate(event)" autocomplete="off" autofocus="false">
+    <form id="formClockUpdate" class="grid vertical" onsubmit="clockUpdate(event)" autocomplete="off" autofocus="false">
       <input type="hidden" name="id" id="input.id" value=""><input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="number" name="utc" id="input.utc" placeholder="UTC" required>
       <label class="label-checkbox" for="input.format24H">
         <input type="checkbox" name="format24H" id="input.format24H">
         <p>24H</p>
       </label>
-      <div class="form-actions">
-        <button type="submit">Save</button>
-        <button type="button" onclick="clockDelete('dataId')">Delete</button>
-        <button type="button" onclick="sweetalert2Utils.close()">Cancel</button>
+      <div class="grid horizontal">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" onclick="clockDelete('dataId')">Delete</button>
+        <button class="btn" type="button" onclick="sweetalert2Utils.close()">Cancel</button>
       </div>
     </form>
   </template>
 
-  <div class="grid-contaier search-page-container">
-    <div class="flex-container">
-      <h1 class="container-title">Search</h1>
-      <form id="formSearchPge" class="form horizontal" onsubmit="searchPage(event)">
+  <div class="widget-container widget-search">
+    <div class="grid horizontal widget-actions">
+      <form id="formSearchPge" class="grid horizontal widget-form-actions" onsubmit="searchPage(event)">
         <select name="engine" id="search.engine" onchange="setSearchEngine(event)">
           <option value="">Loading</option>
         </select>
-        <input type="search" name="search" id="search.page" placeholder="Search">
-        <button type="submit">Search</button>
+        <input type="search" name="search" id="search.page" placeholder="Search on web">
+        <button class="btn-icon" type="submit">
+          <span class="material-icons">search</span>
+        </button>
       </form>
-      <button onclick="showSettings()">Settings</button>
+      <button class="btn-icon" onclick="showSettings()">
+        <span class="material-icons">settings</span>
+      </button>
     </div>
   </div>
 
-  <div class="grid-container row site-container">
-    <div class="flex-container">
-      <h1 class="container-title">Sites</h1>
-      <input type="search" name="search" id="site.search" placeholder="Search">
-      <button id="btnTypeOpenTab" title="toggle" onclick="toggleTypeOpenTab()">open on: loading</button>
-      <button onclick="showSiteCreate()">Add</button>
+  <div class="grid vertical widget-container widget-site">
+    <div class="grid horizontal widget-actions">
+      <input type="search" name="search" id="site.search" placeholder="Filter sites">
+      <button class="btn-icon" id="btnTypeOpenTab" title="toggle" onclick="toggleTypeOpenTab()">
+        <span class="material-icons">open_in_new</span>
+      </button>
+      <button class="btn-icon" onclick="showSiteCreate()">
+        <span class="material-icons">add</span>
+      </button>
     </div>
-    <div class="grid-container site-item-list" id="site-item-list-container">
+    <div class="grid vertical widget-list-item" id="site-item-list-container">
       <h6>Loading</h6>
     </div>
   </div>
 
-  <div class="grid-container row clock-container">
-    <div class="flex-container">
-      <h1 class="container-title">Clocks</h1>
-      <input type="search" name="search" id="clock.search" placeholder="Search">
-      <button onclick="showClockCreate()">Add</button>
+  <div class="grid vertical widget-container widget-clock">
+    <div class="grid horizontal widget-actions">
+      <input type="search" name="search" id="clock.search" placeholder="Filter clocks">
+      <button class="btn-icon" onclick="showClockCreate()">
+        <span class="material-icons">add</span>
+      </button>
     </div>
-    <div class="grid-container clock-item-list" id="clock-item-list-container">
+    <div class="grid vertical widget-list-item" id="clock-item-list-container">
       <h6>Loading</h6>
     </div>
   </div>

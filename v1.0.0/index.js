@@ -54,7 +54,7 @@ async function renderSearchEngineList() {
       return (
         html +
         `
-          <button type="button" class="searchengine-item" onclick="deleteSearchEngine(${item.id})">
+          <button class="btn" type="button" class="searchengine-item" onclick="deleteSearchEngine(${item.id})">
             <p class="name">${item.name}</p>
             <p class="url">${item.url}</p>
           </button>
@@ -151,10 +151,12 @@ async function renderClockList(list = []) {
       return (
         html +
         `
-        <div class="clock-item">
+        <div class="widget-item">
           <p class="time">${timeResult}</p>
           <p class="name">${item.name}</p>
-          <button onclick="showClockUpdate(${item.id})">Edit</button>
+          <button class="btn-icon" onclick="showClockUpdate(${item.id})">
+            <span class="material-icons">settings</span>
+          </button>
         </div>
         `
       );
@@ -291,7 +293,6 @@ function showSiteCreate() {
 async function renderSiteList(list = []) {
   let siteHtml = "<h6>Loading...</h6>";
   document.getElementById("site-item-list-container").innerHTML = siteHtml;
-  await utils.asyncDelay(1);
   const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
 
   if (list.length > 0) {
@@ -312,12 +313,14 @@ async function renderSiteList(list = []) {
       return (
         html +
         `
-        <div class="site-item">
+        <div class="widget-item">
           <a href="${item.url}" target="${aTarget}" title="${itemTitle}">
-          <img src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${item.url}&size=64" alt="${item.name}">
-          <p>${item.name}</p>
+            <img src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${item.url}&size=64" alt="${item.name}">
+            <p>${item.name}</p>
           </a>
-          <button onclick="showSiteUpdate(${item.id})">Edit</button>
+          <button class="btn-icon" onclick="showSiteUpdate(${item.id})">
+            <span class="material-icons">settings</span>
+          </button>
         </div>
       `
       );
@@ -369,10 +372,12 @@ async function toggleTypeOpenTab() {
 
 async function setTypeOpenTab(type = "new-tab") {
   const btn = document.getElementById("btnTypeOpenTab");
-  let btnHtml = "open on: new tab";
+  btn.title = "current: new tab";
+  let btnHtml = `<span class="material-icons">open_in_new</span>`;
 
   if (type != "new-tab") {
-    btnHtml = "open on: same tab";
+    btn.title = "current: same window";
+    btnHtml = `<span class="material-icons">open_in_new_off</span>`;
   }
 
   btn.innerHTML = btnHtml;
@@ -398,7 +403,7 @@ async function focusSearch() {
 
 async function init() {
   await focusSearch();
-  await utils.asyncDelay(0.5);
+  await utils.asyncDelay(0.1);
   await initSettings();
   await filterSiteList();
   await filterClockList();
