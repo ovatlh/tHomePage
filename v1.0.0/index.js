@@ -128,8 +128,9 @@ async function renderSiteList(list = []) {
   document.getElementById("site-item-list-container").innerHTML = siteHtml;
 }
 
-async function filterSiteList(event) {
-  const filter = event.target.value;
+async function filterSiteList() {
+  const input = document.getElementById("site.search");
+  const filter = input.value;
   let list = [];
   clearTimeout(timerFilterSiteList);
   timerFilterSiteList = setTimeout(async () => {
@@ -162,7 +163,7 @@ async function toggleTypeOpenTab() {
   await dbUtils.Update(dbUtils.DB_TABLES.SETTINGS, data);
 
   await setTypeOpenTab(data.typeOpenTab);
-  await renderSiteList();
+  await filterSiteList();
 }
 
 async function setTypeOpenTab(type = "new-tab") {
@@ -197,8 +198,7 @@ async function init() {
   await focusSearch();
   await utils.asyncDelay(0.5);
   await initTypeOpenTab();
-  const siteList = await dbUtils.ReadAll(dbUtils.DB_TABLES.SITE);
-  await renderSiteList(siteList);
+  await filterSiteList();
   await initFilterSiteList();
 }
 
