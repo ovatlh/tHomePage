@@ -300,6 +300,11 @@ input[type="checkbox"] {
     max-width: 90%;
   }
 
+  input[type="checkbox"] {
+    width: initial;
+    scale: 1;
+  }
+
   .clock-item-list {
     grid-template-columns: 1fr 1fr;
   }
