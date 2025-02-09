@@ -17,12 +17,26 @@
 </head>
 <body>
   <template id="templateFormSettings">
-    <form id="formSettings" class="form vertical" onsubmit="settings(event)" autofocus="false">
+    <form id="formSettings" class="form vertical" onsubmit="settings(event)" autocomplete="off" autofocus="false">
       <button type="button" onclick="downloadDB()">Export DB</button>
       <input type="file" id="settings.importdb" accept=".json">
       <button type="button" onclick="importDB()">Import DB</button>
+      <button type="button" onclick="showSearchEngines()">Search engines</button>
       <button type="button" onclick="sweetalert2Utils.close()">Close</button>
     </form>
+  </template>
+
+  <template id="templateFormSearchEngine">
+    <div class="grid-container">
+      <form id="formSearchEngine" class="form vertical" onsubmit="searchEngine(event)" autocomplete="off" autofocus="false">
+        <input type="text" name="name" id="input.name" placeholder="Name" required>
+        <input type="text" name="url" id="input.url" placeholder="URL" required>
+        <button type="submit">Create</button>
+        <div class="search-engine-list-container" id="search-engine-list-container">
+          <h6>Loading</h6>
+        </div>
+      </form>
+    </div>
   </template>
 
   <template id="templateFormSiteCreate">
@@ -85,7 +99,13 @@
   <div class="grid-contaier search-page-container">
     <div class="flex-container">
       <h1 class="container-title">Search</h1>
-      <input type="search" name="search" id="search.page" placeholder="Search">
+      <form id="formSearchPge" class="form horizontal" onsubmit="searchPage(event)">
+        <select name="engine" id="search.engine" onchange="setSearchEngine(event)">
+          <option value="">Loading</option>
+        </select>
+        <input type="search" name="search" id="search.page" placeholder="Search">
+        <button type="submit">Search</button>
+      </form>
       <button onclick="showSettings()">Settings</button>
     </div>
   </div>

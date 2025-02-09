@@ -5,7 +5,7 @@ var sweetalert2Utils =
       Swal.close();
     }
 
-    function showModal(title = "", html = "", fnDidOpen = null) {
+    function showModal(title = "", html = "", fnDidOpen = null, fnDidClose = null) {
       Swal.fire({
         title: title,
         showConfirmButton: false,
@@ -13,6 +13,11 @@ var sweetalert2Utils =
         didOpen: function() {
           if(fnDidOpen) {
             fnDidOpen();
+          }
+        },
+        didClose: function() {
+          if(fnDidClose) {
+            fnDidClose();
           }
         }
       });

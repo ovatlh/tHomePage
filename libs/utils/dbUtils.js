@@ -8,12 +8,18 @@ var dbUtils =
       SETTINGS: "settings",
       SITE: "site",
       CLOCK: "clock",
+      SEARCHENGINE: "searchengine",
     };
     const DB_TABLES_MODELS = [
       {
         name: DB_TABLES.SETTINGS,
         pk: "id",
-        columns: ["dateTimeCreate", "typeOpenTab"],
+        columns: ["dateTimeCreate", "typeOpenTab", "searchEngine"],
+      },
+      {
+        name: DB_TABLES.SEARCHENGINE,
+        pk: "id",
+        columns: ["dateTimeCreate", "name", "url"],
       },
       {
         name: DB_TABLES.SITE,

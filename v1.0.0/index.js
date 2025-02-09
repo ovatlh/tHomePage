@@ -22,6 +22,8 @@ async function importDB() {
       const json = e.target.result;
       await dbUtils.importJSONToIndexedDB(json);
       await filterSiteList();
+      await renderSearchEngineSelect();
+      await initSearchEngineSelect();
       sweetalert2Utils.showToast("data imported");
     } catch (error) {
       console.error(error);
@@ -35,27 +37,108 @@ async function showSettings() {
   sweetalert2Utils.showModal("Settings", template);
 }
 
-function settings(formEvent) {
+async function deleteSearchEngine(id) {
+  id = Number(id);
+  await dbUtils.DeleteById(dbUtils.DB_TABLES.SEARCHENGINE, id);
+  await renderSearchEngineList();
+  await renderSearchEngineSelect();
+}
+
+async function renderSearchEngineList() {
+  let searchEngineHtml = "<h6>Loading...</h6>";
+  document.getElementById("search-engine-list-container").innerHTML = searchEngineHtml;
+
+  const list = await dbUtils.ReadAll(dbUtils.DB_TABLES.SEARCHENGINE);
+  if(list.length > 0){
+    searchEngineHtml = list.reduce((html, item) => {
+      return (
+        html +
+        `
+          <button type="button" class="searchengine-item" onclick="deleteSearchEngine(${item.id})">
+            <p class="name">${item.name}</p>
+            <p class="url">${item.url}</p>
+          </button>
+        `
+      );
+    }, "");
+  } else {
+    searchEngineHtml = "<h6>No items</h6>";
+  }
+
+  document.getElementById("search-engine-list-container").innerHTML = searchEngineHtml;
+}
+
+async function renderSearchEngineSelect() {
+  let searchEngineHtml = `<option value="">Loading...</option>`;
+  document.getElementById("search.engine").innerHTML = searchEngineHtml;
+
+  const list = await dbUtils.ReadAll(dbUtils.DB_TABLES.SEARCHENGINE);
+  if(list.length > 0){
+    searchEngineHtml = list.reduce((html, item) => {
+      return (
+        html +
+        `
+          <option value="${item.url}">${item.name}</option>
+        `
+      );
+    }, "");
+  } else {
+    searchEngineHtml = `<option value="">No items</option>`;
+  }
+
+  document.getElementById("search.engine").innerHTML = searchEngineHtml;
+}
+
+async function initSearchEngineSelect() {
+  const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
+  document.getElementById("search.engine").value = settings.searchEngine;
+}
+
+async function setSearchEngine(event) {
+  const value = event.srcElement.value;
+  const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
+  settings.searchEngine = value;
+  await dbUtils.Update(dbUtils.DB_TABLES.SETTINGS, settings);
+}
+
+async function searchEngine(formEvent) {
   formEvent.preventDefault();
+  const data = utils.formToObject(formEvent.srcElement);
+  await dbUtils.Create(dbUtils.DB_TABLES.SEARCHENGINE, data);
+  await renderSearchEngineList();
+  await renderSearchEngineSelect();
+  formEvent.srcElement.reset();
+}
+
+async function showSearchEngines() {
+  const template = document.getElementById("templateFormSearchEngine").innerHTML;
+  sweetalert2Utils.showModal("Seach engines", template, () => {
+    renderSearchEngineList();
+  }, () => {
+    showSettings();
+  });
 }
 
 async function searchOnPage(value = "") {
-  const engine = "https://www.google.com/search?q=";
-  const searchURL = engine + encodeURIComponent(value);
-  const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
-  if(!settings && settings.typeOpenTab == "new-tab") {
-    window.open(searchURL, "_blank");
+  const selectDOM = document.getElementById("search.engine");
+  const engine = selectDOM.options[selectDOM.selectedIndex].value;
+  if(engine.length > 0) {
+    const searchURL = engine + encodeURIComponent(value);
+    const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
+    if(settings && settings.typeOpenTab == "new-tab") {
+      window.open(searchURL, "_blank");
+    } else {
+      window.location.href = searchURL;
+    }
+  } else {
+    sweetalert2Utils.showToast("No search engines");
   }
-
-  window.location.href = searchURL;
 }
 
-async function initSearchOnPage() {
-  const input = document.getElementById("search.page");
-  input.addEventListener("search", function() {
-    const value = input.value.trim();
-    searchOnPage(value);
-  });
+async function searchPage(formEvent) {
+  formEvent.preventDefault();
+  const data = utils.formToObject(formEvent.srcElement);
+  searchOnPage(data.search.trim());
 }
 
 async function renderClockList(list = []) {
@@ -294,12 +377,13 @@ async function setTypeOpenTab(type = "new-tab") {
   btn.innerHTML = btnHtml;
 }
 
-async function initTypeOpenTab() {
+async function initSettings() {
   let data = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
   if (!data) {
     const newData = {
       dateTimeCreate: Date.now(),
       typeOpenTab: "new-tab",
+      searchEngine: "",
     };
     await dbUtils.Create(dbUtils.DB_TABLES.SETTINGS, newData);
     data = newData;
@@ -314,12 +398,13 @@ async function focusSearch() {
 async function init() {
   await focusSearch();
   await utils.asyncDelay(0.5);
-  await initTypeOpenTab();
+  await initSettings();
   await filterSiteList();
   await filterClockList();
   await initFilterSiteList();
   await initFilterClockList();
-  await initSearchOnPage();
+  await renderSearchEngineSelect();
+  await initSearchEngineSelect();
 }
 
 init();

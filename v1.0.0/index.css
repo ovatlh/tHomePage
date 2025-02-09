@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* outline: 1px solid red; */
+  outline: 1px solid red;
 }
 
 :root {
@@ -117,6 +117,10 @@ input[type="checkbox"] {
   grid-auto-flow: row;
 }
 
+.form.horizontal {
+  grid-auto-flow: column;
+}
+
 .form-actions {
   display: grid;
   grid-auto-flow: column;
@@ -152,6 +156,21 @@ input[type="checkbox"] {
 
 .search-page-container {
   grid-area: SEARCH;
+}
+
+.search-page-container .form {
+  width: 100%;
+  grid-template-columns: auto 1fr auto;
+}
+
+.search-engine-list-container {
+  display: grid;
+  grid-auto-flow: row;
+  padding: 1rem;
+  gap: 1rem;
+  height: 10rem;
+  align-content: start;
+  overflow-y: scroll;
 }
 
 .site-container {
