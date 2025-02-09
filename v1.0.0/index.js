@@ -291,6 +291,7 @@ function showSiteCreate() {
 async function renderSiteList(list = []) {
   let siteHtml = "<h6>Loading...</h6>";
   document.getElementById("site-item-list-container").innerHTML = siteHtml;
+  await utils.asyncDelay(1);
   const settings = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
 
   if (list.length > 0) {
@@ -360,10 +361,10 @@ async function toggleTypeOpenTab() {
     data.typeOpenTab = "new-tab";
   }
 
+  await filterSiteList();
   await dbUtils.Update(dbUtils.DB_TABLES.SETTINGS, data);
 
   await setTypeOpenTab(data.typeOpenTab);
-  await filterSiteList();
 }
 
 async function setTypeOpenTab(type = "new-tab") {
