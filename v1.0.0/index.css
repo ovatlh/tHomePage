@@ -31,7 +31,7 @@
   --site-item-gap: 0.5rem;
   --site-item-padding: 1rem;
   --site-item-clr: white;
-  --site-item-bg-clr: rgba(255, 255, 255, 0.05);
+  --site-item-bg-clr: rgba(255, 255, 255, 0.1);
   --site-item-btn-offset: -0.5rem;
   --site-item-btn-bg-clr: rgba(255, 255, 255, 0.05);
   --site-item-btn-clr: white;
@@ -75,6 +75,7 @@ html {
 body {
   display: grid;
   height: 100dvh !important;
+  max-height: 100dvh;
   padding: var(--body-padding);
   gap: var(--body-gap);
   grid-template-areas: "SEARCH CLOCK" "SITE CLOCK";
@@ -188,6 +189,7 @@ form .grid.horizontal {
   gap: var(--site-list-gap);
   padding: var(--site-list-padding);
   justify-content: center;
+  align-content: start;
   overflow-y: auto;
 }
 .widget-container.widget-site .widget-item {
@@ -261,11 +263,43 @@ form .grid.horizontal {
 }
 
 @media (max-width: 50rem) {
-  html {
-    font-size: 0.5rem;
+  :root {
+    --clock-item-time-fontsize: 1rem;
+    --clock-item-name-fontsize: 0.5rem;
   }
 
   .swal2-popup {
     max-width: 90%;
+  }
+
+  .swal2-html-container {
+    padding: 1rem;
+    justify-items: center;
+  }
+
+  .swal2-html-container * {
+    max-width: 70dvw;
+  }
+
+  body {
+    grid-template-areas: "CLOCK" "SEARCH" "SITE";
+    grid-template-columns: 1fr;
+    grid-template-rows: 20dvh 1fr 50dvh;
+  }
+
+  .widget-container.widget-container.widget-search .grid.horizontal {
+    grid-auto-flow: row;
+    justify-items: center;
+  }
+
+  .widget-container.widget-clock .widget-list-item {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .widget-container.widget-site .widget-item .btn-icon {
+    display: grid;
+  }
+  .widget-container.widget-clock .widget-item .btn-icon {
+    display: grid;
   }
 }
