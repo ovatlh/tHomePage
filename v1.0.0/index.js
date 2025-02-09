@@ -162,7 +162,7 @@ async function renderClockList(list = []) {
       );
     }, "");
   } else {
-    clockHtml = "<h6>No items<h6>";
+    clockHtml = "<h6>No items</h6>";
   }
 
   document.getElementById("clock-item-list-container").innerHTML = clockHtml;
@@ -326,7 +326,7 @@ async function renderSiteList(list = []) {
       );
     }, "");
   } else {
-    siteHtml = "<h6>No items<h6>";
+    siteHtml = "<h6>No items</h6>";
   }
 
   document.getElementById("site-item-list-container").innerHTML = siteHtml;
