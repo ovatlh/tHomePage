@@ -26,8 +26,8 @@
   --site-container-gap: 1rem;
   --site-item-list-gap: 1rem;
   --site-item-list-padding: 1rem;
-  --site-item-list-height: calc(100vh - calc(var(--title-container-fontsize) * 2) - calc(var(--html-padding) * 2) - calc(var(--body-gap) * 2));
-  --site-item-list-maxwidth: calc(100vh - calc(var(--title-container-fontsize) * 2) - calc(var(--html-padding) * 2) - calc(var(--body-gap) * 2));
+  --site-item-list-height: calc(100dvh - calc(var(--title-container-fontsize) * 2) - calc(var(--html-padding) * 2) - calc(var(--body-gap) * 2));
+  --site-item-list-maxwidth: calc(100dvh - calc(var(--title-container-fontsize) * 2) - calc(var(--html-padding) * 2) - calc(var(--body-gap) * 2));
   --site-item-width: 7rem;
   --site-item-fontsize: 0.8rem;
   --site-bgclr: hsl(0, 0%, 15%);
@@ -67,6 +67,7 @@ button {
   padding: 0.5rem;
   border-radius: 0;
   cursor: pointer;
+  font-size: 1rem;
   min-width: fit-content;
 }
 
@@ -84,6 +85,7 @@ input[type="search"] {
   color: var(--input-clr);
   border: 1px solid var(--input-brdclr);
   padding: 0.5rem;
+  font-size: 1rem;
   border-radius: 0;
   width: 100%;
 }
@@ -136,10 +138,6 @@ input[type="search"] {
 
 .site-container {
   gap: var(--site-container-gap);
-}
-
-.clock-container {
-  gap: var(--clock-container-gap);
 }
 
 .site-item-list {
@@ -217,8 +215,38 @@ input[type="search"] {
   display: block;
 }
 
+.clock-container {
+  gap: var(--clock-container-gap);
+}
+
 .clock-item-list {
   height: var(--site-item-list-height);
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+@media (max-width: 50rem) {
+  html {
+    font-size: 0.5rem;
+  }
+
+  body {
+    grid-template-areas:
+      "SEARCH"
+      "CLOCK"
+      "SITE";
+  }
+
+  :root {
+    --site-item-list-height: calc(calc(100dvh - calc(var(--title-container-fontsize) * 3) - calc(var(--html-padding) * 2) - calc(var(--body-gap) * 2) - calc(var(--site-container-gap) + var(--clock-container-gap))) / 2);
+    --site-item-list-gap: 1.5rem;
+  }
+
+  .swal2-popup {
+    max-width: 90%;
+  }
+
+  .site-item button {
+    display: block;
+  }
 }
