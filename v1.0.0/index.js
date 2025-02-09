@@ -130,7 +130,7 @@ async function renderSiteList(list = []) {
 
 async function filterSiteList() {
   const input = document.getElementById("site.search");
-  const filter = input.value;
+  const filter = input.value.trim();
   let list = [];
   clearTimeout(timerFilterSiteList);
   timerFilterSiteList = setTimeout(async () => {
