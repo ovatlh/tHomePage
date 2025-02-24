@@ -78,7 +78,7 @@ body {
   max-height: 100dvh;
   padding: var(--body-padding);
   gap: var(--body-gap);
-  grid-template-areas: "SEARCH CLOCK" "SITE CLOCK";
+  grid-template-areas: "SITE CLOCK" "SEARCH CLOCK";
   align-items: center;
   justify-items: center;
   grid-template-columns: 1fr 20rem;
