@@ -85,12 +85,33 @@ var utils =
       return timeFormated;
     }
 
+    function arrayToGroupedArray(list = [], property = "") {
+      const grouped = list.reduce((group, item) => {
+        if(!item.hasOwnProperty(property)) {
+          item[property] = "No group";
+        }
+        if(!group[item[property]]) {
+          group[item[property]] = [];
+        }
+        group[item[property]].push(item);
+        return group;
+      }, {});
+
+      const groups = Object.entries(grouped).map(([groupName, items]) => ({
+        name: groupName,
+        itemList: items
+      }));
+
+      return groups;
+    }
+
     return {
       formToObject,
       objectToForm,
       sortByProperty,
       asyncDelay,
       downloadJSON,
-      timeWithUTC
+      timeWithUTC,
+      arrayToGroupedArray
     };
   })();
