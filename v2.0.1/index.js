@@ -48,15 +48,17 @@ function fnInitSettings() {
 }
 window.fnInitSettings = fnInitSettings;
 
-async function fnSetSiteOpenModeAsync(type = "new-tab") {
+async function fnSetSiteOpenModeAsync(openSiteMode = "new-tab") {
   const btn = document.getElementById("btn-site-open-mode");
   btn.title = "new tab";
   btn.dataset.iconActive = 1;
 
-  if(type !== "new-tab") {
+  if(openSiteMode !== "new-tab") {
     btn.dataset.iconActive = 2;
     btn.title = "same tab";
   }
+
+  await fnInitSiteListRenderAsync(openSiteMode);
 }
 
 async function fnInitOpenSiteModeAsync() {
@@ -71,7 +73,6 @@ async function fnInitOpenSiteModeAsync() {
     config.openSiteMode = "new-tab";
   }
 
-  // await filterSiteList();
   await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, config);
 
   await fnSetSiteOpenModeAsync(config.openSiteMode);
@@ -98,24 +99,22 @@ function fnInitSiteCreate() {
 }
 window.fnInitSiteCreate = fnInitSiteCreate;
 
-async function fnRenderSiteListContainer(list = []) {
+async function fnSiteListContainerRenderAsync(list = [], openSiteMode = "new-tab") {
   let siteHTML = `<p class="font-bold">No sites found</p>`;
-
-  const settings = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
 
   if(list.length > 0) {
     const groups = utils.arrayToGroupedArray(list, "group");
     siteHTML = groups.reduce((htmlAllGroup, group) => {
       let itemListHTML = group.itemList.reduce((htmlItemList, item) => {
-        let itemTitle = item.name;
+        let title = item.name;
         if(item.description.length > 0) {
-          itemTitle += `: ${item.description}`;
+          title += `: ${item.description}`;
         }
         if(item.tags.length > 0) {
-          itemTitle += ` [${item.tags}]`;
+          title += ` [${item.tags}]`;
         }
         let aTarget = "_blank";
-        if(settings.openSiteMode !== "new-tab") {
+        if(openSiteMode !== "new-tab") {
           aTarget = "";
         }
 
@@ -123,7 +122,7 @@ async function fnRenderSiteListContainer(list = []) {
           htmlItemList +
           `
             <div class="item">
-              <a href="${item.url}" target="${aTarget}" title="${itemTitle}">
+              <a href="${item.url}" target="${aTarget}" title="${title}">
                 <img src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${item.url}&size=64" alt="${item.name}">
                 <p>${item.name}</p>
               </a>
@@ -155,26 +154,27 @@ async function fnRenderSiteListContainer(list = []) {
 }
 
 async function fnInitConfigAsync() {
-  const config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
+  let config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
   if(!config) {
     const data = {
       dateTimeCreated: Date.now(),
       openSiteMode: "new-tab",
     };
     await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, data);
+    config = data;
   }
+  await fnSetSiteOpenModeAsync(config.openSiteMode);
 }
 
-async function fnInitSiteListRenderAsync() {
+async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
   let list = [];
   list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
-  await fnRenderSiteListContainer(list);
+  await fnSiteListContainerRenderAsync(list, openSiteMode);
 }
 
 async function fnInit() {
   await indexedDBUtils.fnInitDBAsync(DB_SCHEMA);
   await fnInitConfigAsync();
-  await fnInitOpenSiteModeAsync();
   await fnInitSiteListRenderAsync();
 }
 
