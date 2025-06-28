@@ -27,7 +27,7 @@
   <!-- Site -->
   <!-- CREATE -->
   <template id="templateFormSiteCreate">
-    <form id="formSiteCreate" onsubmit="fnSubmitSiteCreate(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteCreate" onsubmit="fnSubmitSiteCreateAsync(event)" autocomplete="off" autofocus="false">
       <p class="font-bold color-black text-center">New site</p>
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
@@ -43,7 +43,7 @@
   </template>
   <!-- UPDATE -->
   <template id="templateFormSiteUpdate">
-    <form id="formSiteUpdate" onsubmit="fnSubmitSiteUpdate(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteUpdate" onsubmit="fnSubmitSiteUpdateAsync(event)" autocomplete="off" autofocus="false">
       <p class="font-bold color-black text-center">Update site</p>
       <input type="hidden" name="id" id="input.id" value="">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
@@ -54,7 +54,7 @@
 
       <div class="form-actions">
         <button class="btn" type="submit">Save</button>
-        <button class="btn" type="button" onclick="fnInitDeleteSite('OBJ_ID')">Delte</button>
+        <button class="btn" type="button" onclick="fnSiteDeleteAsync('OBJ_ID')">Delete</button>
         <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
       </div>
     </form>

@@ -157,17 +157,31 @@ async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
   await fnSiteListContainerRenderAsync(list, openSiteMode);
 }
 
+// START: DELETE ==========
+async function fnSiteDeleteAsync(id) {
+  id = Number(id); // Ensure id is a Number
+  
+  await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
+}
+window.fnSiteDeleteAsync = fnSiteDeleteAsync;
+// END: DELETE ==========
+
 // START: UPDATE ==========
-async function fnSubmitSiteUpdate(formEvent) {
+async function fnSubmitSiteUpdateAsync(formEvent) {
   formEvent.preventDefault();
   let data = utils.formToObject(formEvent.srcElement);
   data.id = Number(data.id); // Ensure id is a Number
 
-  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
+  let site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, data.id);
+  Object.assign(site, data); // Update the site object with new data
+
+  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, site);
   tmodals.fnCloseWithEscape();
   await fnInitSiteListRenderAsync();
 }
-window.fnSubmitSiteUpdate = fnSubmitSiteUpdate;
+window.fnSubmitSiteUpdateAsync = fnSubmitSiteUpdateAsync;
 
 async function fnInitFormSiteUpdate(id) {
   const site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
@@ -186,7 +200,7 @@ window.fnInitFormSiteUpdate = fnInitFormSiteUpdate;
 // END: UPDATE ==========
 
 // START: CREATE ==========
-async function fnSubmitSiteCreate(formEvent) {
+async function fnSubmitSiteCreateAsync(formEvent) {
   formEvent.preventDefault();
   let data = utils.formToObject(formEvent.srcElement);
 
@@ -194,7 +208,7 @@ async function fnSubmitSiteCreate(formEvent) {
   tmodals.fnCloseWithEscape();
   await fnInitSiteListRenderAsync();
 }
-window.fnSubmitSiteCreate = fnSubmitSiteCreate;
+window.fnSubmitSiteCreateAsync = fnSubmitSiteCreateAsync;
 
 function fnInitFormSiteCreate() {
   const template = document.getElementById("templateFormSiteCreate").innerHTML;
