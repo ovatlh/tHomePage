@@ -8,10 +8,12 @@ window.libs.tmodals = tmodals;
 import utils from "../libs/utils/utils.module.js";
 
 // START: CRUDs ==========
-import  crudSITE from "./crud/site.module.js";
+import crudSITE from "./crud/site.module.js";
 window.crud.site = crudSITE;
 import  crudCONFIG from "./crud/config.module.js";
 window.crud.config = crudCONFIG;
+import crudCLOCK from "./crud/clock.module.js";
+window.crud.clock = crudCLOCK;
 // END: CRUDs ==========
 
 //#region indexedDB
@@ -52,8 +54,9 @@ window.fnInitImportDB = fnInitImportDB;
 
 async function fnInit() {
   await indexedDBUtils.fnInitDBAsync(DB_SCHEMA);
-  await crud.config.fnInitConfigAsync();
-  await crud.site.fnInitSiteListRenderAsync();
+  await crudCONFIG.fnInitConfigAsync();
+  await crudSITE.fnInitSiteListRenderAsync();
+  await crudCLOCK.fnInitIntervalClockList();
 }
 
 fnInit();

@@ -44,6 +44,17 @@
   --site-item-btn-offset: -0.5rem;
   --site-item-btn-bg-clr: rgba(255, 255, 255, 0.05);
   --site-item-btn-clr: white;
+
+  --clock-list-gap: 1rem;
+  --clock-list-padding: 1rem;
+  --clock-item-gap: 0.1rem;
+  --clock-item-padding: 1rem;
+  --clock-item-bg-clr: rgba(255, 255, 255, 0.05);
+  --clock-item-time-fontsize: 2rem;
+  --clock-item-name-fontsize: 0.8rem;
+  --clock-item-btn-offset: -0.5rem;
+  --clock-item-btn-bg-clr: rgba(255, 255, 255, 0.05);
+  --clock-item-btn-clr: white;
 }
 
 input,
@@ -53,6 +64,12 @@ select,
   padding: 0.25em 0.5em;
   border: 1px solid gray;
   border-radius: 0.2em;
+}
+.label-checkbox {
+  cursor: pointer;
+}
+.label-checkbox:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 form {
@@ -113,7 +130,7 @@ body {
   height: 100dvh;
   max-height: 100dvh;
   padding: var(--body-padding);
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr auto;
   grid-template-areas: "SITES CLOCKS";
 }
 
@@ -186,4 +203,44 @@ body {
 
 .clock-container {
   grid-area: CLOCKS;
+}
+.clock-container .content-container {
+  display: grid;
+  gap: var(--widget-gap);
+}
+.clock-container .content-container .item-list {
+  display: grid;
+  grid-auto-flow: row;
+  gap: var(--clock-list-gap);
+  padding: var(--clock-list-padding);
+  align-content: start;
+  overflow-y: auto;
+}
+.clock-container .content-container .item-list .item {
+  position: relative;
+  display: grid;
+  grid-auto-flow: row;
+  background-color: var(--clock-item-bg-clr);
+  gap: var(--clock-item-gap);
+  padding: var(--clock-item-padding);
+}
+.clock-container .content-container .item-list .item .time {
+  font-size: var(--clock-item-time-fontsize);
+  font-weight: bold;
+}
+.clock-container .content-container .item-list .item .name {
+  font-size: var(--clock-item-name-fontsize);
+  text-align: end;
+}
+.clock-container .content-container .item-list .item .btn-icon {
+  position: absolute;
+  right: var(--clock-item-btn-offset);
+  top: var(--clock-item-btn-offset);
+  background-color: var(--clock-item-btn-bg-clr);
+  color: var(--clock-item-btn-clr);
+  border: none;
+  display: none;
+}
+.clock-container .content-container .item-list .item:hover .btn-icon {
+  display: grid;
 }
