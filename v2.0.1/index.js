@@ -157,11 +157,35 @@ async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
   await fnSiteListContainerRenderAsync(list, openSiteMode);
 }
 
+// START: UPDATE ==========
+async function fnSubmitSiteUpdate(formEvent) {
+  formEvent.preventDefault();
+  let data = utils.formToObject(formEvent.srcElement);
+  data.id = Number(data.id); // Ensure id is a Number
+
+  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
+}
+window.fnSubmitSiteUpdate = fnSubmitSiteUpdate;
+
 async function fnInitFormSiteUpdate(id) {
-  console.log({ id });
+  const site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
+  let template = document.getElementById("templateFormSiteUpdate").innerHTML;
+  template = template.replace("'OBJ_ID'", site.id);
+  tmodals.fnShow({
+    html: template,
+    isBackgroundVisible: true,
+    isCloseWithBackground: true,
+    fnRunAfter: () => {
+      utils.objectToForm("formSiteUpdate", site);
+    }
+  });
 }
 window.fnInitFormSiteUpdate = fnInitFormSiteUpdate;
+// END: UPDATE ==========
 
+// START: CREATE ==========
 async function fnSubmitSiteCreate(formEvent) {
   formEvent.preventDefault();
   let data = utils.formToObject(formEvent.srcElement);
@@ -181,6 +205,7 @@ function fnInitFormSiteCreate() {
   });
 }
 window.fnInitFormSiteCreate = fnInitFormSiteCreate;
+// END: CREATE ==========
 //#endregion
 
 async function fnInit() {

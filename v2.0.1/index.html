@@ -24,18 +24,37 @@
       <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Close</button>
     </form>
   </template>
-  <!-- Site: Create -->
+  <!-- Site -->
+  <!-- CREATE -->
   <template id="templateFormSiteCreate">
     <form id="formSiteCreate" onsubmit="fnSubmitSiteCreate(event)" autocomplete="off" autofocus="false">
       <p class="font-bold color-black text-center">New site</p>
-      <input type="text" name="name" id="name" placeholder="Name" required>
-      <input type="text" name="url" id="url" placeholder="URL" required>
-      <input type="text" name="description" id="description" placeholder="Description">
-      <input type="text" name="tags" id="tags" placeholder="Tags">
-      <input type="text" name="groupName" id="group" placeholder="Group">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <input type="text" name="groupName" id="input.group" placeholder="Group">
 
       <div class="form-actions">
         <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <!-- UPDATE -->
+  <template id="templateFormSiteUpdate">
+    <form id="formSiteUpdate" onsubmit="fnSubmitSiteUpdate(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Update site</p>
+      <input type="hidden" name="id" id="input.id" value="">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <input type="text" name="groupName" id="input.groupName" placeholder="Group">
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" onclick="fnInitDeleteSite('OBJ_ID')">Delte</button>
         <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
       </div>
     </form>
