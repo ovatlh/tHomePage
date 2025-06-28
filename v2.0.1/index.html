@@ -21,13 +21,13 @@
       <input type="file" id="importdb" accept=".json">
       <button class="btn" type="button" onclick="fnInitImportDB()">Import DB</button>
       <a href="https://github.com/ovatlh/tHomePage" target="_blank">Github repository</a>
-      <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Close</button>
+      <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Close</button>
     </form>
   </template>
   <!-- Site -->
   <!-- CREATE -->
   <template id="templateFormSiteCreate">
-    <form id="formSiteCreate" onsubmit="fnSubmitSiteCreateAsync(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteCreate" onsubmit="crud.site.fnSubmitSiteCreateAsync(event)" autocomplete="off" autofocus="false">
       <p class="font-bold color-black text-center">New site</p>
       <input type="text" name="name" id="input.name" placeholder="Name" required>
       <input type="text" name="url" id="input.url" placeholder="URL" required>
@@ -37,13 +37,13 @@
 
       <div class="form-actions">
         <button class="btn" type="submit">Create</button>
-        <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
       </div>
     </form>
   </template>
   <!-- UPDATE -->
   <template id="templateFormSiteUpdate">
-    <form id="formSiteUpdate" onsubmit="fnSubmitSiteUpdateAsync(event)" autocomplete="off" autofocus="false">
+    <form id="formSiteUpdate" onsubmit="crud.site.fnSubmitSiteUpdateAsync(event)" autocomplete="off" autofocus="false">
       <p class="font-bold color-black text-center">Update site</p>
       <input type="hidden" name="id" id="input.id" value="">
       <input type="text" name="name" id="input.name" placeholder="Name" required>
@@ -54,25 +54,25 @@
 
       <div class="form-actions">
         <button class="btn" type="submit">Save</button>
-        <button class="btn" type="button" onclick="fnSiteDeleteAsync('OBJ_ID')">Delete</button>
-        <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
+        <button class="btn" type="button" onclick="crud.site.fnSiteDeleteAsync('OBJ_ID')">Delete</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
       </div>
     </form>
   </template>
 
   <div class="widget-container site-container">
     <div class="actions-container">
-      <button class="btn-icon" onclick="fnInitFormConfig()">
+      <button class="btn-icon" onclick="crud.config.fnInitFormConfig()">
         <span class="material-icons">settings</span>
       </button>
 
       <input type="search" name="search-site" id="search.site" placeholder="Filter sites">
 
-      <button class="btn-icon" onclick="fnInitFormSiteCreate()">
+      <button class="btn-icon" onclick="crud.site.fnInitFormSiteCreate()">
         <span class="material-icons">add</span>
       </button>
 
-      <button class="btn-icon" id="btn-site-open-mode" data-icon-active="1" onclick="fnInitOpenSiteModeAsync()">
+      <button class="btn-icon" id="btn-site-open-mode" data-icon-active="1" onclick="crud.site.fnInitOpenSiteModeAsync()">
         <span class="material-icons">open_in_new</span>
 
         <span class="material-icons">open_in_new_off</span>
