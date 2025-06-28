@@ -1,13 +1,15 @@
 import DB_SCHEMA from "./dbSchema.js";
 import indexedDBUtils from "../libs/utils/indexedDBUtils.js";
 import tmodals from "../libs/tmodals/v0.1.0/tmodals.module.js";
+window.tmodals = tmodals;
 import utils from "../libs/utils/utils.module.js";
 
 async function fnInitDownloadDB() {
-  const json = await dbUtils.exportIndexedDBToJSON();
-  const fileName = `${dbUtils.DB_NAME}.${Date.now()}.json`;
+  const json = await indexedDBUtils.fnExporToJsonAsync();
+  const fileName = `${DB_SCHEMA.name}.${Date.now()}.json`;
   utils.downloadJSON(json, fileName);
 }
+window.fnInitDownloadDB = fnInitDownloadDB;
 
 async function fnInitImportDB() {
   const input = document.getElementById("importdb");
@@ -20,25 +22,33 @@ async function fnInitImportDB() {
   reader.onload = async function (e) {
     try {
       const json = e.target.result;
-      await dbUtils.importJSONToIndexedDB(json);
+      const result = await indexedDBUtils.fnImporFromJsonAsync(json);
+      if(result) {
+        tmodals.fnShow({
+          html: `<p class="font-bold color-black">Database imported successfully!</p>`,
+          isBackgroundVisible: true,
+          isCloseWithBackground: true,
+        });
+      }
     } catch (error) {
       console.error(error);
     }
   };
   reader.readAsText(file);
 }
+window.fnInitImportDB = fnInitImportDB;
 
-async function fnInitSettings() {
+function fnInitSettings() {
   const template = document.getElementById("templateFormSettings").innerHTML;
   tmodals.fnShow({
     html: template,
     isBackgroundVisible: true,
     isCloseWithBackground: true,
   });
-
 }
+window.fnInitSettings = fnInitSettings;
 
-async function fnSetSiteOpenMode(type = "new-tab") {
+async function fnSetSiteOpenModeAsync(type = "new-tab") {
   const btn = document.getElementById("btn-site-open-mode");
   btn.title = "new tab";
   btn.dataset.iconActive = 1;
@@ -49,32 +59,35 @@ async function fnSetSiteOpenMode(type = "new-tab") {
   }
 }
 
-async function fnInitSiteOpenMode() {
-  const data = await dbUtils.ReadById(dbUtils.DB_TABLES.SETTINGS, 1);
-  if(!data) {
+async function fnInitOpenSiteModeAsync() {
+  const config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
+  if(!config) {
     return;
   }
 
-  if(data.typeOpenTab == "new-tab") {
-    data.typeOpenTab = "same-tab";
+  if(config.openSiteMode == "new-tab") {
+    config.openSiteMode = "same-tab";
   } else {
-    data.typeOpenTab = "new-tab";
+    config.openSiteMode = "new-tab";
   }
 
   // await filterSiteList();
-  await dbUtils.Update(dbUtils.DB_TABLES.SETTINGS, data);
+  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, config);
 
-  await fnSetSiteOpenMode(data.typeOpenTab);
+  await fnSetSiteOpenModeAsync(config.openSiteMode);
 }
+window.fnInitOpenSiteModeAsync = fnInitOpenSiteModeAsync;
 
 async function fnSubmitSiteCreate(formEvent) {
   formEvent.preventDefault();
   let data = utils.formToObject(formEvent.srcElement);
   data.dateTimeCreate = Date.now();
 
-  await dbUtils.Create(dbUtils.DB_TABLES.SITE, data);
-  tmodals.fnClose();
+  await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
 }
+window.fnSubmitSiteCreate = fnSubmitSiteCreate;
 
 function fnInitSiteCreate() {
   const template = document.getElementById("templateFormSiteCreate").innerHTML;
@@ -84,12 +97,12 @@ function fnInitSiteCreate() {
     isCloseWithBackground: true,
   });
 }
+window.fnInitSiteCreate = fnInitSiteCreate;
 
 async function fnRenderSiteListContainer(list = []) {
   let siteHTML = `<p class="font-bold">No sites found</p>`;
 
   const settings = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
-  await utils.asyncDelay(1);
 
   if(list.length > 0) {
     const groups = utils.arrayToGroupedArray(list, "group");
@@ -103,7 +116,7 @@ async function fnRenderSiteListContainer(list = []) {
           itemTitle += ` [${item.tags}]`;
         }
         let aTarget = "_blank";
-        if(settings.typeOpenTab !== "new-tab") {
+        if(settings.openSiteMode !== "new-tab") {
           aTarget = "";
         }
 
@@ -142,13 +155,28 @@ async function fnRenderSiteListContainer(list = []) {
   document.getElementById("site-list-container").innerHTML = siteHTML;
 }
 
-async function fnInit() {
-  await indexedDBUtils.fnInitDBAsync(DB_SCHEMA);
+async function fnInitConfigAsync() {
+  const config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
+  if(!config) {
+    const data = {
+      dateTimeCreated: Date.now(),
+      openSiteMode: "new-tab",
+    };
+    await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, data);
+  }
+}
 
+async function fnInitSiteListRenderAsync() {
   let list = [];
   list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
-
   await fnRenderSiteListContainer(list);
+}
+
+async function fnInit() {
+  await indexedDBUtils.fnInitDBAsync(DB_SCHEMA);
+  await fnInitConfigAsync();
+  await fnInitOpenSiteModeAsync();
+  await fnInitSiteListRenderAsync();
 }
 
 fnInit();
