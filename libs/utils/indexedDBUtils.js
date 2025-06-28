@@ -180,7 +180,12 @@ const indexedDBUtils = (function () {
       columnList.forEach((columnItem) => {
         tempData[columnItem.name] = typeof columnItem.default === "function" ? columnItem.default() : columnItem.default;
       });
-      Object.assign(tempData, data);
+      Object.keys(data).forEach((key) => {
+        const value = data[key];
+        if(value !== undefined && value !== null && value !== "") {
+          tempData[key] = value;
+        }
+      });
       const transactionObj = _db.transaction([tableName], "readwrite");
       const storeObj = transactionObj.objectStore(tableName);
       const addRequestObj = storeObj.add(tempData);
