@@ -5,12 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tHomePage - v2.0.1</title>
 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="../libs/tmodals/v0.1.0/tmodals.css">
   <link rel="stylesheet" href="index.css">
 
   <script src="index.js" type="module" defer></script>
 </head>
 <body>
-  
+  <!-- Form templates -->
+  <!-- Settings -->
+  <template id="templateFormSettings">
+    <form id="formSettings" onsubmit="fnSubmitSettings(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Settings</p>
+      <button class="btn" type="button" onclick="fnInitDownloadDB()">Export DB</button>
+      <input type="file" id="importdb" accept=".json">
+      <button class="btn" type="button" onclick="fnInitImportDB()">Import DB</button>
+      <a href="https://github.com/ovatlh/tHomePage" target="_blank">Github repository</a>
+      <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Close</button>
+    </form>
+  </template>
+  <!-- Site: Create -->
+  <template id="templateFormSiteCreate">
+    <form id="formSiteCreate" onsubmit="fnSubmitSiteCreate(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">New site</p>
+      <input type="text" name="name" id="name" placeholder="Name" required>
+      <input type="text" name="url" id="url" placeholder="URL" required>
+      <input type="text" name="description" id="description" placeholder="Description">
+      <input type="text" name="tags" id="tags" placeholder="Tags">
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+
+  <div class="widget-container site-container">
+    <div class="actions-container">
+      <button class="btn-icon" onclick="fnInitSettings()">
+        <span class="material-icons">settings</span>
+      </button>
+
+      <input type="search" name="search-site" id="search.site" placeholder="Filter sites">
+
+      <button class="btn-icon" onclick="fnInitSiteCreate()">
+        <span class="material-icons">add</span>
+      </button>
+
+      <button class="btn-icon" id="btn-site-open-mode" data-icon-active="1" onclick="fnInitSiteOpenMode()">
+        <span class="material-icons">open_in_new</span>
+
+        <span class="material-icons">open_in_new_off</span>
+      </button>
+    </div>
+
+    <div class="content-container" id="site-list-container">
+      <p class="font-bold">Sites: Loading...</p>
+    </div>
+  </div>
+
+  <div class="widget-container clock-container">
+    <div class="actions-container">
+
+    </div>
+
+    <div class="content-container" id="clock-list-container">
+      <p class="font-bold">Clocks: Loading...</p>
+    </div>
+  </div>
 </body>
 </html>

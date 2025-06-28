@@ -3,6 +3,7 @@ const DB_SCHEMA = {
   version: 1,
   tableDefinition: {
     CONFIG: {
+      name: "CONFIG",
       pk: "id",
       columns: [
         {
@@ -17,6 +18,7 @@ const DB_SCHEMA = {
       ],
     },
     SITE: {
+      name: "SITE",
       pk: "id",
       columns: [
         {
@@ -50,6 +52,7 @@ const DB_SCHEMA = {
       ],
     },
     CLOCK: {
+      name: "CLOCK",
       pk: "id",
       columns: [
         {

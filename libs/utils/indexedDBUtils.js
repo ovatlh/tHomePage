@@ -128,7 +128,7 @@ const indexedDBUtils = (function () {
         const dbObj = event.target.result;
         Object.keys(importDataObj).forEach((storeName) => {
           if (!dbObj.objectStoreNames.contains(storeName)) {
-            db.createObjectStore(storeName, { keyPath: _dbSchema.tableDefinition[storeName].pk, autoIncrement: true });
+            dbObj.createObjectStore(storeName, { keyPath: _dbSchema.tableDefinition[storeName].pk, autoIncrement: true });
           }
         });
       };
@@ -174,7 +174,7 @@ const indexedDBUtils = (function () {
   // START: CRUD operations ==================================================
   function fnCreateAsync(tableName, data) {
     return new Promise((resolve, reject) => {
-      const transactionObj = db.transaction([tableName], "readwrite");
+      const transactionObj = _db.transaction([tableName], "readwrite");
       const storeObj = transactionObj.objectStore(tableName);
       const addRequestObj = storeObj.add(data);
 
@@ -191,7 +191,7 @@ const indexedDBUtils = (function () {
 
   function fnReadAllAsync(tableName, filterText = "") {
     return new Promise((resolve, reject) => {
-      const transactionObj = db.transaction([tableName], "readonly");
+      const transactionObj = _db.transaction([tableName], "readonly");
       const storeObj = transactionObj.objectStore(tableName);
       const cursorRequestObj = storeObj.openCursor();
       const itemList = [];
@@ -219,7 +219,7 @@ const indexedDBUtils = (function () {
 
   function fnReadByPKAsync(tableName, pk) {
     return new Promise((resolve, reject) => {
-      const transactionObj = db.transaction([tableName], "readonly");
+      const transactionObj = _db.transaction([tableName], "readonly");
       const storeObj = transactionObj.objectStore(tableName);
 
       const requestObj = storeObj.get(pk);
@@ -237,7 +237,7 @@ const indexedDBUtils = (function () {
 
   function fnUpdateAsync(tableName, data) {
     return new Promise((resolve, reject) => {
-      const transactionObj = db.transaction([tableName], "readwrite");
+      const transactionObj = _db.transaction([tableName], "readwrite");
       const storeObj = transactionObj.objectStore(tableName);
       const updateRequestObj = storeObj.put(data);
 
@@ -253,7 +253,7 @@ const indexedDBUtils = (function () {
 
   function fnDeleteByPKAsync(tableName, pk) {
     return new Promise((resolve, reject) => {
-      const transactionObj = db.transaction([tableName], "readwrite");
+      const transactionObj = _db.transaction([tableName], "readwrite");
       const storeObj = transactionObj.objectStore(tableName);
       const deleteRequestObj = storeObj.delete(pk);
 
@@ -268,48 +268,56 @@ const indexedDBUtils = (function () {
   }
   // END: CRUD operations ==================================================
 
-  function fnInitDB(dbSchema = {}) {
-    _dbSchema = dbSchema;
+  function fnInitDBAsync(dbSchema = {}) {
+    return new Promise((resolve, reject) => {
+      _dbSchema = dbSchema;
 
-    // init db
-    _requestDB = indexedDB.open(_dbSchema.name, _dbSchema.version);
+      // init db
+      _requestDB = indexedDB.open(_dbSchema.name, _dbSchema.version);
 
-    // on error
-    _requestDB.onerror = function (event) {
-      console.error("IndexedDB error: ", event);
-    };
+      // on error
+      _requestDB.onerror = function (event) {
+        console.error("IndexedDB error: ", event);
+        resolve(false);
+      };
 
-    //exec on create/update db
-    _requestDB.onupgradeneeded = function (event) {
-      _db = event.target.result;
-      const upgradeTransaction = event.target.transaction;
+      //exec on create/update db
+      _requestDB.onupgradeneeded = function (event) {
+        _db = event.target.result;
+        const upgradeTransaction = event.target.transaction;
 
-      Object.entries(_dbSchema.tableDefinition).forEach((table) => {
-        const tableName = table[0];
-        const tableDefinitionObj = table[1];
-        if (_db.objectStoreNames.contains(tableName)) {
-          const store = upgradeTransaction.objectStore(tableName);
+        Object.entries(_dbSchema.tableDefinition).forEach((table) => {
+          const tableName = table[0];
+          const tableDefinitionObj = table[1];
+          if (_db.objectStoreNames.contains(tableName)) {
+            const store = upgradeTransaction.objectStore(tableName);
 
-          if (store.keyPath !== tableDefinitionObj.pk) {
-            // Si el keyPath ha cambiado, migrar el store
-            migrateStoreWithKeyPathChange(_db, tableName, tableDefinitionObj, upgradeTransaction);
+            if (store.keyPath !== tableDefinitionObj.pk) {
+              // Si el keyPath ha cambiado, migrar el store
+              migrateStoreWithKeyPathChange(_db, tableName, tableDefinitionObj, upgradeTransaction);
+            } else {
+              // Actualiar indices sin perder datos
+              migrateIndexes(store, tableDefinitionObj);
+            }
           } else {
-            // Actualiar indices sin perder datos
-            migrateIndexes(store, tableDefinitionObj);
+            // Si el store no existe, crearlo
+            const newStore = _db.createObjectStore(tableName, { keyPath: tableDefinitionObj.pk, autoIncrement: true });
+            tableDefinitionObj.columns.forEach((column) => {
+              newStore.createIndex(column.name, column.name, { unique: false });
+            });
           }
-        } else {
-          // Si el store no existe, crearlo
-          const newStore = _db.createObjectStore(tableName, { keyPath: tableDefinitionObj.pk, autoIncrement: true });
-          tableDefinitionObj.columns.forEach((column) => {
-            newStore.createIndex(column.name, column.name, { unique: false });
-          });
-        }
-      });
-    };
+        });
+      };
+
+      _requestDB.onsuccess = function (event) {
+        _db = event.target.result;
+        resolve(true);
+      };
+    });
   }
 
   return {
-    fnInitDB,
+    fnInitDBAsync,
     fnExporToJsonAsync,
     fnImporFromJsonAsync,
     fnCreateAsync,
