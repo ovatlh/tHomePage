@@ -14,9 +14,9 @@
 <body>
   <!-- Form templates -->
   <!-- Settings -->
-  <template id="templateFormSettings">
-    <form id="formSettings" onsubmit="fnSubmitSettings(event)" autocomplete="off" autofocus="false">
-      <p class="font-bold color-black text-center">Settings</p>
+  <template id="templateFormConfig">
+    <form id="formConfig" onsubmit="fnSubmitConfig(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Configuration</p>
       <button class="btn" type="button" onclick="fnInitDownloadDB()">Export DB</button>
       <input type="file" id="importdb" accept=".json">
       <button class="btn" type="button" onclick="fnInitImportDB()">Import DB</button>
@@ -32,6 +32,7 @@
       <input type="text" name="url" id="url" placeholder="URL" required>
       <input type="text" name="description" id="description" placeholder="Description">
       <input type="text" name="tags" id="tags" placeholder="Tags">
+      <input type="text" name="groupName" id="group" placeholder="Group">
 
       <div class="form-actions">
         <button class="btn" type="submit">Create</button>
@@ -42,13 +43,13 @@
 
   <div class="widget-container site-container">
     <div class="actions-container">
-      <button class="btn-icon" onclick="fnInitSettings()">
+      <button class="btn-icon" onclick="fnInitFormConfig()">
         <span class="material-icons">settings</span>
       </button>
 
       <input type="search" name="search-site" id="search.site" placeholder="Filter sites">
 
-      <button class="btn-icon" onclick="fnInitSiteCreate()">
+      <button class="btn-icon" onclick="fnInitFormSiteCreate()">
         <span class="material-icons">add</span>
       </button>
 

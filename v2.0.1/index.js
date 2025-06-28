@@ -4,6 +4,7 @@ import tmodals from "../libs/tmodals/v0.1.0/tmodals.module.js";
 window.tmodals = tmodals;
 import utils from "../libs/utils/utils.module.js";
 
+//#region indexedDB
 async function fnInitDownloadDB() {
   const json = await indexedDBUtils.fnExporToJsonAsync();
   const fileName = `${DB_SCHEMA.name}.${Date.now()}.json`;
@@ -37,17 +38,34 @@ async function fnInitImportDB() {
   reader.readAsText(file);
 }
 window.fnInitImportDB = fnInitImportDB;
+//#endregion
 
-function fnInitSettings() {
-  const template = document.getElementById("templateFormSettings").innerHTML;
+//#region config management
+async function fnInitConfigAsync() {
+  let config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
+  if(!config) {
+    const data = {
+      dateTimeCreated: Date.now(),
+      openSiteMode: "new-tab",
+    };
+    await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, data);
+    config = data;
+  }
+  await fnSetSiteOpenModeAsync(config.openSiteMode);
+}
+
+function fnInitFormConfig() {
+  const template = document.getElementById("templateFormConfig").innerHTML;
   tmodals.fnShow({
     html: template,
     isBackgroundVisible: true,
     isCloseWithBackground: true,
   });
 }
-window.fnInitSettings = fnInitSettings;
+window.fnInitFormConfig = fnInitFormConfig;
+//#endregion
 
+//#region site management
 async function fnSetSiteOpenModeAsync(openSiteMode = "new-tab") {
   const btn = document.getElementById("btn-site-open-mode");
   btn.title = "new tab";
@@ -79,31 +97,11 @@ async function fnInitOpenSiteModeAsync() {
 }
 window.fnInitOpenSiteModeAsync = fnInitOpenSiteModeAsync;
 
-async function fnSubmitSiteCreate(formEvent) {
-  formEvent.preventDefault();
-  let data = utils.formToObject(formEvent.srcElement);
-
-  await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
-  tmodals.fnCloseWithEscape();
-  await fnInitSiteListRenderAsync();
-}
-window.fnSubmitSiteCreate = fnSubmitSiteCreate;
-
-function fnInitSiteCreate() {
-  const template = document.getElementById("templateFormSiteCreate").innerHTML;
-  tmodals.fnShow({
-    html: template,
-    isBackgroundVisible: true,
-    isCloseWithBackground: true,
-  });
-}
-window.fnInitSiteCreate = fnInitSiteCreate;
-
 async function fnSiteListContainerRenderAsync(list = [], openSiteMode = "new-tab") {
   let siteHTML = `<p class="font-bold">No sites found</p>`;
 
   if(list.length > 0) {
-    const groups = utils.arrayToGroupedArray(list, "group");
+    const groups = utils.arrayToGroupedArray(list, "groupName");
     siteHTML = groups.reduce((htmlAllGroup, group) => {
       let itemListHTML = group.itemList.reduce((htmlItemList, item) => {
         let title = item.name;
@@ -126,7 +124,7 @@ async function fnSiteListContainerRenderAsync(list = [], openSiteMode = "new-tab
                 <img src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${item.url}&size=64" alt="${item.name}">
                 <p>${item.name}</p>
               </a>
-              <button class="btn-icon" onclick="fnInitSiteUpdate(${item.id})">
+              <button class="btn-icon" onclick="fnInitFormSiteUpdate(${item.id})">
                 <span class="material-icons">settings</span>
               </button>
             </div>
@@ -153,24 +151,37 @@ async function fnSiteListContainerRenderAsync(list = [], openSiteMode = "new-tab
   document.getElementById("site-list-container").innerHTML = siteHTML;
 }
 
-async function fnInitConfigAsync() {
-  let config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
-  if(!config) {
-    const data = {
-      dateTimeCreated: Date.now(),
-      openSiteMode: "new-tab",
-    };
-    await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, data);
-    config = data;
-  }
-  await fnSetSiteOpenModeAsync(config.openSiteMode);
-}
-
 async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
   let list = [];
   list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
   await fnSiteListContainerRenderAsync(list, openSiteMode);
 }
+
+async function fnInitFormSiteUpdate(id) {
+  console.log({ id });
+}
+window.fnInitFormSiteUpdate = fnInitFormSiteUpdate;
+
+async function fnSubmitSiteCreate(formEvent) {
+  formEvent.preventDefault();
+  let data = utils.formToObject(formEvent.srcElement);
+
+  await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
+}
+window.fnSubmitSiteCreate = fnSubmitSiteCreate;
+
+function fnInitFormSiteCreate() {
+  const template = document.getElementById("templateFormSiteCreate").innerHTML;
+  tmodals.fnShow({
+    html: template,
+    isBackgroundVisible: true,
+    isCloseWithBackground: true,
+  });
+}
+window.fnInitFormSiteCreate = fnInitFormSiteCreate;
+//#endregion
 
 async function fnInit() {
   await indexedDBUtils.fnInitDBAsync(DB_SCHEMA);
