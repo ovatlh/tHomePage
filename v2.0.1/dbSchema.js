@@ -31,7 +31,7 @@ const DB_SCHEMA = {
         },
         {
           name: "groupName",
-          default: "NoGroup"
+          default: "No group"
         },
         {
           name: "name",
