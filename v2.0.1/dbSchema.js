@@ -13,7 +13,7 @@ const DB_SCHEMA = {
         },
         {
           name: "openSiteMode",
-          default: "new",
+          default: "new-tab",
         },
       ],
     },

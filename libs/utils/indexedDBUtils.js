@@ -174,9 +174,16 @@ const indexedDBUtils = (function () {
   // START: CRUD operations ==================================================
   function fnCreateAsync(tableName, data) {
     return new Promise((resolve, reject) => {
+      const columnList = _dbSchema.tableDefinition[tableName].columns;
+      // Combinar los datos proporcionados con los valores por defecto
+      const tempData = {};
+      columnList.forEach((columnItem) => {
+        tempData[columnItem.name] = typeof columnItem.default === "function" ? columnItem.default() : columnItem.default;
+      });
+      Object.assign(tempData, data);
       const transactionObj = _db.transaction([tableName], "readwrite");
       const storeObj = transactionObj.objectStore(tableName);
-      const addRequestObj = storeObj.add(data);
+      const addRequestObj = storeObj.add(tempData);
 
       addRequestObj.onsuccess = function (event) {
         resolve(event.target.result); // Devuelve el ID generado

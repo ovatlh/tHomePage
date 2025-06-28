@@ -81,7 +81,6 @@ window.fnInitOpenSiteModeAsync = fnInitOpenSiteModeAsync;
 async function fnSubmitSiteCreate(formEvent) {
   formEvent.preventDefault();
   let data = utils.formToObject(formEvent.srcElement);
-  data.dateTimeCreate = Date.now();
 
   await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, data);
   tmodals.fnCloseWithEscape();
