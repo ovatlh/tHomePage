@@ -121,7 +121,7 @@ const indexedDBUtils = (function () {
 
       requestObj.onerror = function (event) {
         console.error("Error opening IndexedDB:", event);
-        reject(event);
+        reject(false);
       };
 
       requestObj.onupgradeneeded = function (event) {
@@ -163,7 +163,7 @@ const indexedDBUtils = (function () {
 
           transactionObj.onerror = (event) => {
             console.error("Error during import transaction:", event);
-            reject(event);
+            reject(false);
           };
         });
       };
