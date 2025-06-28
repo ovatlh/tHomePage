@@ -97,6 +97,49 @@ async function fnInitOpenSiteModeAsync() {
 }
 window.fnInitOpenSiteModeAsync = fnInitOpenSiteModeAsync;
 
+// START: DELETE ==========
+async function fnSiteDeleteAsync(id) {
+  id = Number(id); // Ensure id is a Number
+  
+  await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
+}
+window.fnSiteDeleteAsync = fnSiteDeleteAsync;
+// END: DELETE ==========
+
+// START: UPDATE ==========
+async function fnSubmitSiteUpdateAsync(formEvent) {
+  formEvent.preventDefault();
+  let data = utils.formToObject(formEvent.srcElement);
+  data.id = Number(data.id); // Ensure id is a Number
+
+  let site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, data.id);
+  Object.assign(site, data); // Update the site object with new data
+
+  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, site);
+  tmodals.fnCloseWithEscape();
+  await fnInitSiteListRenderAsync();
+}
+window.fnSubmitSiteUpdateAsync = fnSubmitSiteUpdateAsync;
+
+async function fnInitFormSiteUpdate(id) {
+  const site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
+  let template = document.getElementById("templateFormSiteUpdate").innerHTML;
+  template = template.replace("'OBJ_ID'", site.id);
+  tmodals.fnShow({
+    html: template,
+    isBackgroundVisible: true,
+    isCloseWithBackground: true,
+    fnRunAfter: () => {
+      utils.objectToForm("formSiteUpdate", site);
+    }
+  });
+}
+window.fnInitFormSiteUpdate = fnInitFormSiteUpdate;
+// END: UPDATE ==========
+
+// START: READ ==========
 async function fnSiteListContainerRenderAsync(list = [], openSiteMode = "new-tab") {
   let siteHTML = `<p class="font-bold">No sites found</p>`;
 
@@ -156,48 +199,7 @@ async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
   list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
   await fnSiteListContainerRenderAsync(list, openSiteMode);
 }
-
-// START: DELETE ==========
-async function fnSiteDeleteAsync(id) {
-  id = Number(id); // Ensure id is a Number
-  
-  await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
-  tmodals.fnCloseWithEscape();
-  await fnInitSiteListRenderAsync();
-}
-window.fnSiteDeleteAsync = fnSiteDeleteAsync;
-// END: DELETE ==========
-
-// START: UPDATE ==========
-async function fnSubmitSiteUpdateAsync(formEvent) {
-  formEvent.preventDefault();
-  let data = utils.formToObject(formEvent.srcElement);
-  data.id = Number(data.id); // Ensure id is a Number
-
-  let site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, data.id);
-  Object.assign(site, data); // Update the site object with new data
-
-  await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, site);
-  tmodals.fnCloseWithEscape();
-  await fnInitSiteListRenderAsync();
-}
-window.fnSubmitSiteUpdateAsync = fnSubmitSiteUpdateAsync;
-
-async function fnInitFormSiteUpdate(id) {
-  const site = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id);
-  let template = document.getElementById("templateFormSiteUpdate").innerHTML;
-  template = template.replace("'OBJ_ID'", site.id);
-  tmodals.fnShow({
-    html: template,
-    isBackgroundVisible: true,
-    isCloseWithBackground: true,
-    fnRunAfter: () => {
-      utils.objectToForm("formSiteUpdate", site);
-    }
-  });
-}
-window.fnInitFormSiteUpdate = fnInitFormSiteUpdate;
-// END: UPDATE ==========
+// END: READ ==========
 
 // START: CREATE ==========
 async function fnSubmitSiteCreateAsync(formEvent) {
