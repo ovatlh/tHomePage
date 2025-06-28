@@ -83,10 +83,10 @@ const utils = (function () {
     return timeFormated;
   }
 
-  function arrayToGroupedArray(list = [], property = "") {
+  function arrayToGroupedArray(list = [], property = "", defaultValue = "NONE") {
     const grouped = list.reduce((group, item) => {
       if(!item.hasOwnProperty(property)) {
-        item[property] = "No group";
+        item[property] = defaultValue;
       }
       if(!group[item[property]]) {
         group[item[property]] = [];
