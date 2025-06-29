@@ -79,7 +79,12 @@ const crudSITE = (function () {
     document.getElementById("site-list-container").innerHTML = siteHTML;
   }
 
-  async function fnInitSiteListRenderAsync(openSiteMode = "new-tab") {
+  async function fnInitSiteListRenderAsync() {
+    const config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
+    let openSiteMode = "new-tab";
+    if(config) {
+      openSiteMode = config.openSiteMode;
+    }
     let list = [];
     list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
     await fnSiteListContainerRenderAsync(list, openSiteMode);
@@ -135,7 +140,7 @@ const crudSITE = (function () {
       btn.title = "same tab";
     }
 
-    await fnInitSiteListRenderAsync(openSiteMode);
+    await fnInitSiteListRenderAsync();
   }
 
   async function fnInitOpenSiteModeAsync() {
@@ -153,6 +158,7 @@ const crudSITE = (function () {
     await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CONFIG.name, config);
 
     await fnSetSiteOpenModeAsync(config.openSiteMode);
+    await fnInitSiteListRenderAsync();
   }
 
   return {
