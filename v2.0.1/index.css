@@ -70,6 +70,10 @@ select,
 }
 .label-checkbox {
   cursor: pointer;
+  display: grid;
+  gap: 0.5em;
+  align-items: center;
+  grid-template-columns: auto 1fr;
 }
 .label-checkbox:hover {
   background-color: rgba(0, 0, 0, 0.05);
@@ -79,6 +83,9 @@ form {
   display: grid;
   grid-auto-flow: row;
   gap: var(--form-gap);
+}
+form * {
+  width: 100%;
 }
 form .form-actions {
   display: flex;
