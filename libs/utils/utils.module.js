@@ -1,4 +1,13 @@
 const utils = (function () {
+  const _data = {
+    debounceTimeouts: {
+      template: {
+        timeout: null,
+        delay: 500,
+      }
+    }
+  };
+
   function formToObject(formElement) {
     return Object.fromEntries(new FormData(formElement));
   }
@@ -103,6 +112,27 @@ const utils = (function () {
     return groups;
   }
 
+  function debounce(fn, key = "", delay = 500) {
+    if(!key) {
+      return;
+    }
+    if (!_data.debounceTimeouts[key]) {
+      _data.debounceTimeouts[key] = { ..._data.debounceTimeouts.template };
+    }
+    _data.debounceTimeouts[key].delay = delay;
+    if (_data.debounceTimeouts[key].timeout) {
+      clearTimeout(_data.debounceTimeouts[key].timeout);
+    }
+    _data.debounceTimeouts[key].timeout = setTimeout(async () => {
+      try {
+        await fn();
+      } catch (error) {
+        console.error(`utils: Error in debounce function for key "${key}":`, error);
+      }
+      _data.debounceTimeouts[key].timeout = null;
+    }, delay);
+  }
+
   return {
     formToObject,
     objectToForm,
@@ -110,7 +140,8 @@ const utils = (function () {
     asyncDelay,
     downloadJSON,
     timeWithUTC,
-    arrayToGroupedArray
+    arrayToGroupedArray,
+    debounce
   };
 })();
 
