@@ -18,6 +18,7 @@ const crudCLOCK = (function () {
     containerElement: null,
     listElement: null,
     clockList: [],
+    clockListFilterText: "",
     dataList: [],
   };
   // END: SYSTEM ==========
@@ -107,8 +108,9 @@ const crudCLOCK = (function () {
     });
   }
 
-  async function fnInitClockListRenderAsync(filterText = "") {
+  async function fnInitClockListRenderAsync() {
     let list = [];
+    const filterText = config.clockListFilterText;
     list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.CLOCK.name, filterText);
     if(!config.containerElement) {
       config.containerElement = document.getElementById("clock-list-container");
@@ -164,6 +166,14 @@ const crudCLOCK = (function () {
   }
   // END: DELETE ==========
 
+  async function fnSearchClockAsync(event) {
+    const value = event.srcElement.value;
+
+    utils.debounce(async () => {
+      config.clockListFilterText = value;
+    }, "fnSearchClockAsync", 300);
+  }
+
   return {
     fnInitFormClockCreate,
     fnSubmitClockCreateAsync,
@@ -172,6 +182,7 @@ const crudCLOCK = (function () {
     fnInitFormClockUpdate,
     fnSubmitClockUpdateAsync,
     fnClockDeleteAsync,
+    fnSearchClockAsync
   };
 })();
 

@@ -79,14 +79,14 @@ const crudSITE = (function () {
     document.getElementById("site-list-container").innerHTML = siteHTML;
   }
 
-  async function fnInitSiteListRenderAsync() {
+  async function fnInitSiteListRenderAsync(filterText = "") {
     const config = await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CONFIG.name, 1);
     let openSiteMode = "new-tab";
     if(config) {
       openSiteMode = config.openSiteMode;
     }
     let list = [];
-    list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name);
+    list = await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.SITE.name, filterText);
     await fnSiteListContainerRenderAsync(list, openSiteMode);
   }
   // END: READ ==========
@@ -161,6 +161,14 @@ const crudSITE = (function () {
     await fnInitSiteListRenderAsync();
   }
 
+  async function fnSearchSiteAsync(event) {
+    const value = event.srcElement.value;
+
+    utils.debounce(async () => {
+      await fnInitSiteListRenderAsync(value);
+    }, "fnSearchSiteAsync", 300);
+  }
+
   return {
     fnSiteDeleteAsync,
     fnSubmitSiteUpdateAsync,
@@ -171,6 +179,7 @@ const crudSITE = (function () {
     fnInitFormSiteCreate,
     fnSetSiteOpenModeAsync,
     fnInitOpenSiteModeAsync,
+    fnSearchSiteAsync
   };
 })();
 

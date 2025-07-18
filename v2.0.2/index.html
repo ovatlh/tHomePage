@@ -106,7 +106,7 @@
         <span class="material-icons">settings</span>
       </button>
 
-      <input type="search" name="search-site" id="search.site" placeholder="Filter sites">
+      <input type="search" name="search-site" id="search.site" placeholder="Filter sites" oninput="crud.site.fnSearchSiteAsync(event)">
 
       <button class="btn-icon" onclick="crud.site.fnInitFormSiteCreate()">
         <span class="material-icons">add</span>
@@ -126,7 +126,7 @@
 
   <div class="widget-container clock-container">
     <div class="actions-container">
-      <input type="search" name="search-clock" id="search.clock" placeholder="Filter clocks">
+      <input type="search" name="search-clock" id="search.clock" placeholder="Filter clocks" oninput="crud.clock.fnSearchClockAsync(event)">
 
       <button class="btn-icon" onclick="crud.clock.fnInitFormClockCreate()">
         <span class="material-icons">add</span>
