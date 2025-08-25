@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tHomePage - v2.0.1</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../libs/tmodals/v0.1.0/tmodals.css">
+  <link rel="stylesheet" href="index.css">
+
+  <script src="index.js" type="module" defer></script>
+</head>
+<body>
+  <!-- Form templates -->
+  <!-- START: Settings ========== -->
+  <template id="templateFormConfig">
+    <form id="formConfig" onsubmit="fnSubmitConfig(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Configuration</p>
+      <button class="btn" type="button" onclick="fnInitDownloadDB()">Export DB</button>
+      <input type="file" id="importdb" accept=".json">
+      <button class="btn" type="button" onclick="fnInitImportDB()">Import DB</button>
+      <a href="https://github.com/ovatlh/tHomePage" target="_blank">Github repository</a>
+      <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Close</button>
+    </form>
+  </template>
+  <!-- END: Settings ========== -->
+  <!-- START: Site ========== -->
+  <!-- CREATE -->
+  <template id="templateFormSiteCreate">
+    <form id="formSiteCreate" onsubmit="crud.site.fnSubmitSiteCreateAsync(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">New site</p>
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <input type="text" name="groupName" id="input.group" placeholder="Group">
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <!-- UPDATE -->
+  <template id="templateFormSiteUpdate">
+    <form id="formSiteUpdate" onsubmit="crud.site.fnSubmitSiteUpdateAsync(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Update site</p>
+      <input type="hidden" name="id" id="input.id" value="">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="text" name="url" id="input.url" placeholder="URL" required>
+      <input type="text" name="description" id="input.description" placeholder="Description">
+      <input type="text" name="tags" id="input.tags" placeholder="Tags">
+      <input type="text" name="groupName" id="input.groupName" placeholder="Group">
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" onclick="crud.site.fnSiteDeleteAsync('OBJ_ID')">Delete</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <!-- END: Site ========== -->
+  <!-- START: Clock ========== -->
+  <!-- CREATE -->
+  <template id="templateFormClockCreate">
+    <form id="formClockCreate" onsubmit="crud.clock.fnSubmitClockCreateAsync(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">New clock</p>
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="number" name="utc" id="input.utc" placeholder="UTC" required inputmode="numeric">
+      <label class="label-checkbox color-black" for="input.isFormat24H">
+        <input type="checkbox" name="isFormat24H" id="input.isFormat24H">
+        <span>24H</span>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <!-- UPDATE -->
+  <template id="templateFormClockUpdate">
+    <form id="formClockUpdate" onsubmit="crud.clock.fnSubmitClockUpdateAsync(event)" autocomplete="off" autofocus="false">
+      <p class="font-bold color-black text-center">Update clock</p>
+      <input type="hidden" name="id" id="input.id" value="">
+      <input type="text" name="name" id="input.name" placeholder="Name" required>
+      <input type="number" name="utc" id="input.utc" placeholder="UTC" required inputmode="numeric">
+      <label class="label-checkbox color-black" for="input.isFormat24H">
+        <input type="checkbox" name="isFormat24H" id="input.isFormat24H">
+        <span>24H</span>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save</button>
+        <button class="btn" type="button" onclick="crud.clock.fnClockDeleteAsync('OBJ_ID')">Delete</button>
+        <button class="btn" type="button" onclick="libs.tmodals.fnCloseWithEscape()">Cancel</button>
+      </div>
+    </form>
+  </template>
+  <!-- END: Clock ========== -->
+
+  <div class="widget-container site-container">
+    <div class="actions-container">
+      <button class="btn-icon" onclick="crud.config.fnInitFormConfig()">
+        <span class="material-icons">settings</span>
+      </button>
+
+      <input type="search" name="search-site" id="search.site" placeholder="Filter sites" oninput="crud.site.fnSearchSiteAsync(event)">
+
+      <button class="btn-icon" onclick="crud.site.fnInitFormSiteCreate()">
+        <span class="material-icons">add</span>
+      </button>
+
+      <button class="btn-icon" id="btn-site-open-mode" data-icon-active="1" onclick="crud.site.fnInitOpenSiteModeAsync()">
+        <span class="material-icons">open_in_new</span>
+
+        <span class="material-icons">open_in_new_off</span>
+      </button>
+    </div>
+
+    <div class="content-container" id="site-list-container">
+      <p class="font-bold">Sites: Loading...</p>
+    </div>
+  </div>
+
+  <div class="widget-container clock-container">
+    <div class="actions-container">
+      <input type="search" name="search-clock" id="search.clock" placeholder="Filter clocks" oninput="crud.clock.fnSearchClockAsync(event)">
+
+      <button class="btn-icon" onclick="crud.clock.fnInitFormClockCreate()">
+        <span class="material-icons">add</span>
+      </button>
+    </div>
+
+    <div class="content-container" id="clock-list-container">
+      <p class="font-bold">Clocks: Loading...</p>
+    </div>
+  </div>
+</body>
+</html>
