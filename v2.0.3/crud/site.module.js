@@ -29,7 +29,8 @@ const crudSITE = (function () {
     let siteHTML = `<p class="font-bold">No sites found</p>`;
 
     if(list.length > 0) {
-      const groups = utils.arrayToGroupedArray(list, "groupName");
+      let groups = utils.arrayToGroupedArray(list, "groupName");
+      groups = groups.sort((a,b) => a.name.localeCompare(b.name));
       siteHTML = groups.reduce((htmlAllGroup, group) => {
         let itemList = group.itemList.sort((a,b) => a.name.localeCompare(b.name));
         let itemListHTML = itemList.reduce((htmlItemList, item) => {
