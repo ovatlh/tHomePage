@@ -1,0 +1,78 @@
+const DB_SCHEMA = {
+	name: "tHomePage",
+	version: 1,
+	tableDefinition: {
+		CONFIG: {
+			name: "CONFIG",
+			pk: "id",
+			columns: [
+				{
+					name: "dateTimeCreated",
+					default: () => Date.now(),
+				},
+				{
+					name: "openSiteMode",
+					default: "new-tab",
+				},
+			],
+		},
+		SITE: {
+			name: "SITE",
+			pk: "id",
+			columns: [
+				{
+					name: "dateTimeCreated",
+					default: () => Date.now(),
+				},
+				{
+					name: "description",
+					default: "",
+				},
+				{
+					name: "groupName",
+					default: "No group",
+				},
+				{
+					name: "name",
+					default: "",
+				},
+				{
+					name: "order",
+					default: 0,
+				},
+				{
+					name: "tags",
+					default: "",
+				},
+				{
+					name: "url",
+					default: "",
+				},
+			],
+		},
+		CLOCK: {
+			name: "CLOCK",
+			pk: "id",
+			columns: [
+				{
+					name: "dateTimeCreated",
+					default: () => Date.now(),
+				},
+				{
+					name: "isFormat24H",
+					default: false,
+				},
+				{
+					name: "name",
+					default: "",
+				},
+				{
+					name: "utc",
+					default: 0,
+				},
+			],
+		},
+	},
+};
+
+export default DB_SCHEMA;
