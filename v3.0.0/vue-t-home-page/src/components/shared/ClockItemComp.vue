@@ -6,6 +6,7 @@ import { onBeforeUnmount, ref } from "vue";
 import { fnGetHourFormatedWithUTC } from "@/utils/datetime.utils";
 
 // Components
+import Button from "openvue/button";
 
 // Interfaces
 import type { MClock } from "@/models/MClock";
@@ -47,12 +48,10 @@ onBeforeUnmount(() => {
 			<p class="font-size-2 font-bold">{{ hourText }}</p>
 		</div>
 
-		<button
-			class="btn-icon btn-config grid padding-0_5 font-size-0_75"
-			type="button"
-			title="Settings"
-		>
-			<i class="oi oi-cog"></i>
-		</button>
+		<Button
+			class="btn-config btn-icon-1"
+			icon="oi oi-cog"
+			severity="contrast"
+		/>
 	</div>
 </template>

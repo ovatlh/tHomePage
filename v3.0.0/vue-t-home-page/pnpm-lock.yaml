@@ -11,6 +11,9 @@ importers:
       '@openvue/openicons':
         specifier: ^1.0.0
         version: 1.0.0
+      '@openvue/themes':
+        specifier: ^1.0.0
+        version: 1.0.0
       openvue:
         specifier: 1.0.0-rc.0
         version: 1.0.0-rc.0(vue@3.5.42(typescript@6.0.3))
@@ -217,6 +220,9 @@ packages:
   '@openuxkit/styles@1.1.0':
     resolution: {integrity: sha512-DohE7jvtnTeapfFjqL0RmX63JmKfv1YbL4V2LFTruNXkdK+GfhtvkyUM/1pCrcmjWyflGfZhW5z8LJzUkzwLDQ==}
 
+  '@openuxkit/themes@1.1.0':
+    resolution: {integrity: sha512-0OuDQLFuhUGKWujAs8ejbhrRac9u0h03T349JqKyuGTQWCVaRyNJiShX9OcqCsVi9tbvFHuMkCxppCL/w1Hslw==}
+
   '@openuxkit/utils@1.0.0':
     resolution: {integrity: sha512-JCLEEFMJK7JVxlMpzC/szjzxem8XkehY3vknHjrs/mjyWcEIoDd8Gk4ySM+HGILuYbMymlzPqkELYnYQq44E4w==}
     engines: {node: '>=12.11.0'}
@@ -233,6 +239,10 @@ packages:
 
   '@openvue/openicons@1.0.0':
     resolution: {integrity: sha512-ZRV8Xt8y7oIYPQjtFiBf2UfxSzsjXcbPEZvvI9364T+F5BGxcP8EboO9ZLMxMRl2RCfFyBYs3XYiYGMLUMlNvA==}
+
+  '@openvue/themes@1.0.0':
+    resolution: {integrity: sha512-YiLHzoa+0ic5yz/+vljDaH3UWNofgu5JLENq2FPMY+rPJD9L2F+/QumvUj7vUHvPIFexnb35FwM6fpetw6BfiA==}
+    engines: {node: '>=12.11.0'}
 
   '@oxc-project/types@0.148.0':
     resolution: {integrity: sha512-Nm4s/jB+4FpFsPhWGEC4h7rzksesmtnMXomo6rCMcg/b8zLQuOziRgkCS1fxDCXOlJB/6Q8oABOZ/OP6RIPj9A==}
@@ -1165,6 +1175,10 @@ snapshots:
     dependencies:
       '@openuxkit/styled': 1.0.0
 
+  '@openuxkit/themes@1.1.0':
+    dependencies:
+      '@openuxkit/styled': 1.0.0
+
   '@openuxkit/utils@1.0.0': {}
 
   '@openvue/core@1.0.0-rc.0(vue@3.5.42(typescript@6.0.3))':
@@ -1182,6 +1196,11 @@ snapshots:
       - vue
 
   '@openvue/openicons@1.0.0': {}
+
+  '@openvue/themes@1.0.0':
+    dependencies:
+      '@openuxkit/styled': 1.0.0
+      '@openuxkit/themes': 1.1.0
 
   '@oxc-project/types@0.148.0': {}
 

@@ -42,3 +42,9 @@ pnpm dev
 ```sh
 pnpm build
 ```
+
+# OpenVue
+
+https://openvue.dev/configuration/
+
+https://openvue.dev/icons/

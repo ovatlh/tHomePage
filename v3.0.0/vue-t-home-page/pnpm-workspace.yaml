@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - '@openvue/themes@1.0.0'

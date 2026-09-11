@@ -5,6 +5,7 @@
 import { fnGetURLIconSite } from "@/utils/site.utils";
 
 // Components
+import Button from "openvue/button";
 
 // Interfaces
 import type { MSite } from "@/models/MSite";
@@ -39,12 +40,10 @@ const props = defineProps<Props>();
 			<p>{{ data.name }}</p>
 		</a>
 
-		<button
-			class="btn-icon btn-config grid padding-0_5 font-size-0_75"
-			type="button"
-			title="Settings"
-		>
-			<i class="oi oi-cog"></i>
-		</button>
+		<Button
+			class="btn-config btn-icon-1"
+			icon="oi oi-cog"
+			severity="contrast"
+		/>
 	</div>
 </template>

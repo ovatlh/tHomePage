@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Libs Imported
 import { ref } from "vue";
+import { useDialog } from "openvue/usedialog";
 
 // Code Imported
 import DB_SCHEMA from "@/database/database.schema";
@@ -12,6 +13,11 @@ import { fnDebounce } from "./utils/form.utils";
 // Components
 import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
 import ClockItemComp from "@/components/shared/ClockItemComp.vue";
+import DynamicDialog from "openvue/dynamicdialog";
+import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";
+import Button from "openvue/button";
+import InputText from "openvue/inputtext";
+import FloatLabel from "openvue/floatlabel";
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";
@@ -20,18 +26,50 @@ import type { MSite } from "@/models/MSite";
 import type { IGroupSite } from "@/interfaces/IGroupSite.ts";
 
 // Props
-const configList = ref<MConfig[]>([]);
 let configItem: MConfig | undefined;
+const configList = ref<MConfig[]>([]);
 const groupList = ref<IGroupSite[]>([]);
 const clockList = ref<MClock[]>([]);
 const siteOpenMode = ref<string>("same-tab"); //new-tab
 const siteTitleOpenMode = ref<string>("Same tab");
 const siteFilterText = ref<string>("");
 const clockFilterText = ref<string>("");
+const dialog = useDialog();
 
 // Emits
 
 // Code
+function fnShowFormSite() {
+	dialog.open(SiteFormComp, {
+		props: {
+			modal: true,
+			dismissableMask: true,
+			showHeader: false,
+			style: {
+				maxHeight: "100%",
+				overflow: "hidden",
+			},
+			contentProps: {
+				style: {
+					padding: "0px",
+					position: "relative",
+				},
+			},
+		},
+		data: {
+			name: `Test: ${Date.now()}`,
+		},
+		onClose: (e: any) => {
+			console.log(e);
+		},
+		emits: {
+			onCustomEvent: (e: any) => {
+				alert(JSON.stringify(e));
+			},
+		},
+	});
+}
+
 async function fnToggleSiteOpenMode() {
 	if (siteOpenMode.value == "same-tab") {
 		siteOpenMode.value = "new-tab";
@@ -136,23 +174,23 @@ Init();
 <template>
 	<div class="container dashboard grid gap-1 padding-1">
 		<div class="container clock-settings grid grid-column grid-column-1-auto gap-1 padding-1 align-items-center">
-			<input
-				class="padding-0_5"
-				type="search"
-				name="searchClock"
-				id="searchClock"
-				placeholder="Filter clocks"
-				v-model="clockFilterText"
-				@input="fnFilterClockList"
-			/>
+			<FloatLabel variant="in">
+				<InputText
+					fluid
+					type="search"
+					id="searchSite"
+					name="searchSite"
+					variant="filled"
+					v-model="clockFilterText"
+					@input="fnFilterClockList"
+				/>
+				<label for="searchSite">Filter clocks</label>
+			</FloatLabel>
 
-			<button
-				class="btn-icon grid padding-0_5"
-				type="button"
-				title="Add"
-			>
-				<i class="oi oi-plus"></i>
-			</button>
+			<Button
+				icon="oi oi-plus"
+				severity="contrast"
+			/>
 		</div>
 
 		<div class="container clock-list grid grid-row gap-1 padding-1 align-content-start">
@@ -171,47 +209,36 @@ Init();
 		</div>
 
 		<div class="container site-settings grid grid-column grid-column-auto-auto-1-auto gap-1 padding-1 align-items-center">
-			<button
-				class="btn-icon grid padding-0_5"
-				type="button"
-				title="Settings"
-			>
-				<i class="oi oi-cog"></i>
-			</button>
-
-			<button
-				class="btn-icon grid padding-0_5"
-				type="button"
-				:title="siteTitleOpenMode"
-				@click="fnToggleSiteOpenMode"
-			>
-				<i
-					v-if="siteOpenMode == 'same-tab'"
-					class="oi oi-window-maximize"
-				></i>
-				<i
-					v-else
-					class="oi oi-external-link"
-				></i>
-			</button>
-
-			<input
-				class="padding-0_5"
-				type="search"
-				name="searchSite"
-				id="searchSite"
-				placeholder="Filter sites"
-				v-model="siteFilterText"
-				@input="fnFilterSiteList"
+			<Button
+				icon="oi oi-cog"
+				severity="contrast"
 			/>
 
-			<button
-				class="btn-icon grid padding-0_5"
-				type="button"
-				title="Add"
-			>
-				<i class="oi oi-plus"></i>
-			</button>
+			<Button
+				:icon="siteOpenMode == 'same-tab' ? 'oi oi-window-maximize' : 'oi oi-external-link'"
+				severity="contrast"
+				:title="siteTitleOpenMode"
+				@click="fnToggleSiteOpenMode"
+			/>
+
+			<FloatLabel variant="in">
+				<InputText
+					fluid
+					type="search"
+					id="searchSite"
+					name="searchSite"
+					variant="filled"
+					v-model="siteFilterText"
+					@input="fnFilterSiteList"
+				/>
+				<label for="searchSite">Filter sites</label>
+			</FloatLabel>
+
+			<Button
+				icon="oi oi-plus"
+				severity="contrast"
+				@click="fnShowFormSite"
+			/>
 		</div>
 
 		<div class="container site-list grid grid-row gap-1 padding-1 align-content-start overflow-x-hidden">
@@ -263,5 +290,7 @@ Init();
 				</button>
 			</div>
 		</form> -->
+
+		<DynamicDialog />
 	</div>
 </template>
