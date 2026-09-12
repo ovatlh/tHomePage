@@ -6,24 +6,26 @@ import { useDialog } from "openvue/usedialog";
 // Code Imported
 import DB_SCHEMA from "@/database/database.schema";
 import indexedDBUtils from "@/utils/indexedDB.utils";
-import { fnDownloadJSON } from "@/utils/json.utils";
 import { fnArrayToGroupArrayByProperty, fnSortByProperty } from "@/utils/array.utils";
 import { fnDebounce } from "./utils/form.utils";
 
 // Components
-import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
-import ClockItemComp from "@/components/shared/ClockItemComp.vue";
-import DynamicDialog from "openvue/dynamicdialog";
-import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";
 import Button from "openvue/button";
 import InputText from "openvue/inputtext";
 import FloatLabel from "openvue/floatlabel";
+import DynamicDialog from "openvue/dynamicdialog";
+import Toast from "openvue/toast";
+import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
+import ClockItemComp from "@/components/shared/ClockItemComp.vue";
+import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";
+import ConfigDialogComp from "@/components/dialogs/ConfigDialogComp.vue";
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";
 import type { MClock } from "@/models/MClock";
 import type { MSite } from "@/models/MSite";
 import type { IGroupSite } from "@/interfaces/IGroupSite.ts";
+import { fnSetHTMLThemeClass } from "./utils/html.utils";
 
 // Props
 let configItem: MConfig | undefined;
@@ -39,6 +41,31 @@ const dialog = useDialog();
 // Emits
 
 // Code
+function fnShowConfigDialog() {
+	dialog.open(ConfigDialogComp, {
+		props: {
+			modal: true,
+			dismissableMask: true,
+			showHeader: false,
+			style: {
+				maxHeight: "100%",
+				overflow: "hidden",
+			},
+			contentProps: {
+				style: {
+					padding: "0px",
+					position: "relative",
+				},
+			},
+		},
+		emits: {
+			onDbImported: () => {
+				Init();
+			},
+		},
+	});
+}
+
 function fnShowFormSite() {
 	dialog.open(SiteFormComp, {
 		props: {
@@ -85,34 +112,6 @@ async function fnToggleSiteOpenMode() {
 	}
 }
 
-async function fnExportDB() {
-	const json = (await indexedDBUtils.fnExporToJsonAsync()) as string;
-	const fileName = `${DB_SCHEMA.name}.${Date.now()}.json`;
-	fnDownloadJSON(json, fileName);
-}
-
-function fnImportDB() {
-	const input = document.getElementById("dbimport") as HTMLInputElement;
-	const file = input.files![0];
-	if (!file) {
-		return;
-	}
-
-	const reader = new FileReader();
-	reader.onload = async function (e) {
-		try {
-			const json = e!.target!.result;
-			const result = await indexedDBUtils.fnImporFromJsonAsync(json as string);
-			if (result) {
-				alert("import success");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
-	reader.readAsText(file);
-}
-
 async function fnLoadClockList(filter: string = "") {
 	let tempClockList = (await indexedDBUtils.fnReadAllAsync(DB_SCHEMA.tableDefinition.CLOCK.name, filter)) as MClock[];
 	clockList.value = fnSortByProperty(tempClockList, "name", "asc");
@@ -132,6 +131,9 @@ async function fnLoadConfigList() {
 			...configList.value[0]!,
 		};
 		siteOpenMode.value = configItem.openSiteMode;
+		if (configItem.theme) {
+			fnSetHTMLThemeClass(configItem.theme);
+		}
 	}
 }
 
@@ -212,6 +214,7 @@ Init();
 			<Button
 				icon="oi oi-cog"
 				severity="contrast"
+				@click="fnShowConfigDialog"
 			/>
 
 			<Button
@@ -292,5 +295,6 @@ Init();
 		</form> -->
 
 		<DynamicDialog />
+		<Toast />
 	</div>
 </template>

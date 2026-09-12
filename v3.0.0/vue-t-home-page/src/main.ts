@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 import OpenVue from "openvue/config";
 import Aura from "@openvue/themes/aura";
 import DialogService from "openvue/dialogservice";
+import ToastService from "openvue/toastservice";
 
 import App from "./App.vue";
 
@@ -23,5 +24,6 @@ app.use(OpenVue, {
 	},
 });
 app.use(DialogService);
+app.use(ToastService);
 
 app.mount("#app");

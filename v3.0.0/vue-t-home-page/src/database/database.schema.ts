@@ -14,6 +14,10 @@ const DB_SCHEMA = {
 					name: "openSiteMode",
 					default: "new-tab",
 				},
+				{
+					name: "theme",
+					default: "app-light",
+				},
 			],
 		},
 		SITE: {
