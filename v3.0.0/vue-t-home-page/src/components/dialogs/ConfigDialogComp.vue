@@ -111,7 +111,7 @@ Init();
 
 <template>
 	<div class="config-dialog-comp dialog-custom grid grid-row">
-		<div class="container header grid grid-column gap-1 padding-1 align-items-center justify-content-space-between sticky-top">
+		<div class="container header grid grid-column gap-1 p-1 align-items-center justify-content-space-between sticky-top">
 			<p class="font-bold">Settings</p>
 
 			<Button
@@ -123,7 +123,7 @@ Init();
 			/>
 		</div>
 
-		<div class="container content grid grid-row gap-1 padding-1">
+		<div class="container content grid grid-row gap-1 p-1">
 			<Button
 				label="Export database"
 				icon="oi oi-file-export"

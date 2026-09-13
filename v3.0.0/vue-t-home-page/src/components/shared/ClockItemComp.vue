@@ -43,7 +43,7 @@ onBeforeUnmount(() => {
 
 <template>
 	<div class="clock-item-comp">
-		<div class="container grid grid-row gap-0_5 padding-0_5">
+		<div class="container grid grid-row gap-0_5 p-0_5">
 			<p class="text-right">{{ data.name }}</p>
 			<p class="font-size-2 font-bold">{{ hourText }}</p>
 		</div>

@@ -66,7 +66,21 @@ function fnShowConfigDialog() {
 	});
 }
 
-function fnShowFormSite() {
+async function fnShowFormSite(id?: number) {
+	const groupOptionList = groupList.value.map((item) => item.name);
+	let formValues: any = {
+		name: "",
+		url: "",
+		description: "",
+		tags: "",
+		groupName: "",
+	};
+	if (id) {
+		const dbItem = (await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, id)) as MSite;
+		if (dbItem) {
+			formValues = { ...dbItem };
+		}
+	}
 	dialog.open(SiteFormComp, {
 		props: {
 			modal: true,
@@ -84,14 +98,23 @@ function fnShowFormSite() {
 			},
 		},
 		data: {
-			name: `Test: ${Date.now()}`,
+			formValues: formValues,
+			groupOptionList: groupOptionList,
 		},
-		onClose: (e: any) => {
-			console.log(e);
+		onClose: async (e: any) => {
+			if (e.data?.form) {
+				if (e.data.form?.id) {
+					await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+				} else {
+					await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+				}
+				await fnLoadSiteList();
+			}
 		},
 		emits: {
-			onCustomEvent: (e: any) => {
-				alert(JSON.stringify(e));
+			onBtnDeleted: async (e: any) => {
+				await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, e);
+				await fnLoadSiteList();
 			},
 		},
 	});
@@ -174,8 +197,8 @@ Init();
 </script>
 
 <template>
-	<div class="container dashboard grid gap-1 padding-1">
-		<div class="container clock-settings grid grid-column grid-column-1-auto gap-1 padding-1 align-items-center">
+	<div class="container dashboard grid gap-1 p-1">
+		<div class="container clock-settings grid grid-column grid-column-1-auto gap-1 p-1 align-items-center">
 			<FloatLabel variant="in">
 				<InputText
 					fluid
@@ -195,7 +218,7 @@ Init();
 			/>
 		</div>
 
-		<div class="container clock-list grid grid-row gap-1 padding-1 align-content-start">
+		<div class="container clock-list grid grid-row gap-1 p-1 align-content-start">
 			<p
 				v-if="clockList.length == 0"
 				class="text-center"
@@ -210,7 +233,7 @@ Init();
 			/>
 		</div>
 
-		<div class="container site-settings grid grid-column grid-column-auto-auto-1-auto gap-1 padding-1 align-items-center">
+		<div class="container site-settings grid grid-column grid-column-auto-auto-1-auto gap-1 p-1 align-items-center">
 			<Button
 				icon="oi oi-cog"
 				severity="contrast"
@@ -240,11 +263,11 @@ Init();
 			<Button
 				icon="oi oi-plus"
 				severity="contrast"
-				@click="fnShowFormSite"
+				@click="fnShowFormSite()"
 			/>
 		</div>
 
-		<div class="container site-list grid grid-row gap-1 padding-1 align-content-start overflow-x-hidden">
+		<div class="container site-list grid grid-row gap-1 p-1 align-content-start overflow-x-hidden">
 			<p
 				v-if="groupList.length == 0"
 				class="text-center"
@@ -253,7 +276,7 @@ Init();
 			</p>
 
 			<div
-				class="container grid grid-row gap-1 padding-1"
+				class="container grid grid-row gap-1 p-1"
 				v-for="(itemGroup, indexGroup) in groupList"
 				:key="indexGroup + 'group'"
 			>
@@ -265,6 +288,7 @@ Init();
 						:key="indexSite + 'site'"
 						:data="itemSite"
 						:open-mode="siteOpenMode"
+						@btn-action-clicked="fnShowFormSite(itemSite.id)"
 					/>
 				</div>
 			</div>

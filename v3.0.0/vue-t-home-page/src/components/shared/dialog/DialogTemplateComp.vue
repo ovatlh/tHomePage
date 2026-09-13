@@ -45,7 +45,7 @@ onMounted(() => {
 
 <template>
 	<div class="site-form-comp dialog-custom grid grid-row">
-		<div class="container header grid grid-column gap-1 padding-1 align-items-center justify-content-space-between sticky-top">
+		<div class="container header grid grid-column gap-1 p-1 align-items-center justify-content-space-between sticky-top">
 			<p class="font-bold">HEADER</p>
 
 			<Button
@@ -57,7 +57,7 @@ onMounted(() => {
 			/>
 		</div>
 
-		<div class="container footer padding-1 sticky-bottom">
+		<div class="container footer p-1 sticky-bottom">
 			<div class="container grid grid-column gap-1 justify-self-end">
 				<Button
 					variant="outlined"
@@ -83,7 +83,7 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<div class="container content grid grid-row gap-1 padding-1">
+		<div class="container content grid grid-row gap-1 p-1">
 			<p>template-dialog-comp: {{ name }}</p>
 
 			<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste, natus saepe aut, est ipsa ullam corrupti voluptas illum corporis eum officia rem dolor aliquid, porro error blanditiis! Dolore, nihil cum?</p>

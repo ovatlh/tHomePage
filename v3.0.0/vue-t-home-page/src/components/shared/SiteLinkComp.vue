@@ -19,6 +19,7 @@ interface Props {
 const props = defineProps<Props>();
 
 // Emits
+const emits = defineEmits(["btnActionClicked"]);
 
 // Code
 
@@ -28,10 +29,10 @@ const props = defineProps<Props>();
 <template>
 	<div class="site-link-comp">
 		<a
-			class="link container grid grid-column grid-column-auto-1 align-items-center gap-0_5 padding-0_5"
+			class="link container grid grid-column grid-column-auto-1 align-items-center gap-0_5 p-0_5"
 			:href="data.url"
 			:target="openMode == 'same-tab' ? '' : '_blank'"
-			:title="fnStringListToString([data.name, data.description], ': ')"
+			:title="fnStringListToString([data.name, data.description, data.tags ? `[${data.tags}]` : ''], ': ')"
 		>
 			<img
 				:src="fnGetURLIconSite(data.url)"
@@ -44,6 +45,7 @@ const props = defineProps<Props>();
 			class="btn-config btn-icon-1"
 			icon="oi oi-cog"
 			severity="contrast"
+			@click="emits('btnActionClicked')"
 		/>
 	</div>
 </template>

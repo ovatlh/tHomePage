@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@openvue/forms':
+        specifier: ^1.0.0
+        version: 1.0.0(vue@3.5.42(typescript@6.0.3))
       '@openvue/openicons':
         specifier: ^1.0.0
         version: 1.0.0
@@ -23,6 +26,9 @@ importers:
       vue:
         specifier: ^3.5.40
         version: 3.5.42(typescript@6.0.3)
+      zod:
+        specifier: ^4.6.2
+        version: 4.6.2
     devDependencies:
       '@tsconfig/node24':
         specifier: ^24.0.4
@@ -213,6 +219,10 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@openuxkit/forms@1.0.0':
+    resolution: {integrity: sha512-0HgeZvIFX2yah16dc4KXoBlPZdMbK75MMOPFx7DGo6fG/R1Ds0ohNW08E1Kynlfiu+LMAxZ1KAS2e0JwmsF5ZQ==}
+    engines: {node: '>=12.11.0'}
+
   '@openuxkit/styled@1.0.0':
     resolution: {integrity: sha512-tXPv00g3qlhZJkDMMK2vxYFQldO5T6Y5HRISU+dfJ3/I1bV8JNx93N1aJb2SQN1xlrO/2UhsISDFYPTVMwXUFQ==}
     engines: {node: '>=12.11.0'}
@@ -227,11 +237,21 @@ packages:
     resolution: {integrity: sha512-JCLEEFMJK7JVxlMpzC/szjzxem8XkehY3vknHjrs/mjyWcEIoDd8Gk4ySM+HGILuYbMymlzPqkELYnYQq44E4w==}
     engines: {node: '>=12.11.0'}
 
+  '@openvue/core@1.0.0':
+    resolution: {integrity: sha512-cVgUD4gSTboMi+zM55fSNxeqrmGlECdrh5oYfZDFx7BwPgvgdZgDKTrIp2/pjiUoxracD+zlS2KYTyw96aai3Q==}
+    engines: {node: '>=12.11.0'}
+    peerDependencies:
+      vue: ^3.5.0
+
   '@openvue/core@1.0.0-rc.0':
     resolution: {integrity: sha512-V/gtPjQ2c8gptbCr0GTfPBCJiuI29AmPIDjyCaIa8oIWFFy+sPir8JTFmDXffqygvo/+nQVKKI3ENxWHceSufA==}
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
+
+  '@openvue/forms@1.0.0':
+    resolution: {integrity: sha512-2sj8b7Bw4mL/+oGfERfu7qEMFYU1C0O+0uf6b4b637oI5P0JqLAqKOF9LRWupWnPokWhkdY7iFhmI2h6PjBrTw==}
+    engines: {node: '>=12.11.0'}
 
   '@openvue/icons@1.0.0-rc.0':
     resolution: {integrity: sha512-yph9R24llE74Hl6mJS1pB0Z7csZDK4njrVdZLOIRusM05R1Res8tIGbnsYOS7wJYZCUZOheOTQO4vco4+kNqpg==}
@@ -955,6 +975,9 @@ packages:
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
+  zod@4.6.2:
+    resolution: {integrity: sha512-lh5RCAGFa1Cm2hjtNwLQhSs/AsqdWnTQaBER9fEwN/88pSh7KOtJavtBx/0VlkN/uFd61SwYmljLMDAsHlvzBQ==}
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -1167,6 +1190,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
+  '@openuxkit/forms@1.0.0':
+    dependencies:
+      '@openuxkit/utils': 1.0.0
+
   '@openuxkit/styled@1.0.0':
     dependencies:
       '@openuxkit/utils': 1.0.0
@@ -1181,12 +1208,27 @@ snapshots:
 
   '@openuxkit/utils@1.0.0': {}
 
+  '@openvue/core@1.0.0(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      '@openuxkit/styled': 1.0.0
+      '@openuxkit/styles': 1.1.0
+      '@openuxkit/utils': 1.0.0
+      vue: 3.5.42(typescript@6.0.3)
+
   '@openvue/core@1.0.0-rc.0(vue@3.5.42(typescript@6.0.3))':
     dependencies:
       '@openuxkit/styled': 1.0.0
       '@openuxkit/styles': 1.1.0
       '@openuxkit/utils': 1.0.0
       vue: 3.5.42(typescript@6.0.3)
+
+  '@openvue/forms@1.0.0(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      '@openuxkit/forms': 1.0.0
+      '@openuxkit/utils': 1.0.0
+      '@openvue/core': 1.0.0(vue@3.5.42(typescript@6.0.3))
+    transitivePeerDependencies:
+      - vue
 
   '@openvue/icons@1.0.0-rc.0(vue@3.5.42(typescript@6.0.3))':
     dependencies:
@@ -1796,3 +1838,5 @@ snapshots:
       powershell-utils: 0.1.0
 
   yallist@3.1.1: {}
+
+  zod@4.6.2: {}

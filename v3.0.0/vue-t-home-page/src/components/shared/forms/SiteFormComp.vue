@@ -1,6 +1,13 @@
 <script setup lang="ts">
 // Libs Imported
 import { inject, nextTick, onMounted, ref } from "vue";
+import { z } from "zod";
+import { zodResolver } from "@openvue/forms/resolvers/zod";
+import { Form, FormField, type FormSubmitEvent } from "@openvue/forms";
+import FloatLabel from "openvue/floatlabel";
+import InputText from "openvue/inputtext";
+import Select from "openvue/select";
+import Message from "openvue/message";
 
 // Code Imported
 
@@ -11,42 +18,67 @@ import Button from "openvue/button";
 
 // Props
 const dialogRef = inject("dialogRef") as any;
-const name = ref<string>("");
+const groupOptionList = ref<string[]>([]);
+const isFormVisible = ref<boolean>(false);
+const formValues = ref<any>({
+	name: "",
+	url: "",
+	description: "",
+	tags: "",
+	groupName: "",
+});
+const schema = z.object({
+	name: z.string().min(1, "Required"),
+	url: z.string().min(1, "Required"),
+	description: z.string().min(0, "Required"),
+	tags: z.string().min(0, "Required"),
+	groupName: z.string().min(1, "Required"),
+});
+const resolver = zodResolver(schema);
 
 // Emits
-const emits = defineEmits(["customEvent"]);
+const emits = defineEmits(["btnDeleted"]);
 
 // Code
-function fnCustom() {
-	emits("customEvent", { fnCustom: "test" });
+function fnDelete() {
+	emits("btnDeleted", formValues.value.id);
+	fnClose();
 }
 
 async function fnClose() {
 	dialogRef.value.close(null);
 }
 
-function fnSave() {
-	dialogRef.value.close({ form: { id: 1, name: "test", desc: "test", isVisible: true } });
+function fnSave(event: FormSubmitEvent) {
+	if (event.valid) {
+		formValues.value = { ...formValues.value, ...event.values };
+		dialogRef.value.close({ form: formValues.value });
+	}
 }
 
 async function Init() {
-	await nextTick();
-	console.log(dialogRef);
+	await nextTick(); //Form: ref
+
+	if (dialogRef.value.data.formValues) {
+		formValues.value = { ...formValues.value, ...dialogRef.value.data.formValues };
+	}
+	if (dialogRef.value.data.groupOptionList) {
+		groupOptionList.value = dialogRef.value.data.groupOptionList;
+	}
+	isFormVisible.value = true;
 }
 
 // Exposes
 
-Init();
-
-onMounted(() => {
-	name.value = dialogRef.value.data.name;
+onMounted(async () => {
+	await Init();
 });
 </script>
 
 <template>
 	<div class="site-form-comp dialog-custom grid grid-row">
-		<div class="container header grid grid-column gap-1 padding-1 align-items-center justify-content-space-between sticky-top">
-			<p class="font-bold">SITE</p>
+		<div class="container header grid grid-column gap-1 p-1 align-items-center justify-content-space-between sticky-top">
+			<p class="font-bold">Site</p>
 
 			<Button
 				rounded
@@ -54,29 +86,212 @@ onMounted(() => {
 				icon="oi oi-times"
 				severity="secondary"
 				@click="fnClose"
+				autofocus
 			/>
 		</div>
 
-		<div class="container footer padding-1 sticky-bottom">
-			<div class="container grid grid-column gap-1 justify-self-end">
-				<Button
-					label="Cancel"
-					icon="oi oi-times"
-					severity="secondary"
-					@click="fnClose"
-				/>
+		<Form
+			v-if="isFormVisible"
+			:initial-values="formValues"
+			:resolver="resolver"
+			:validate-on-blur="true"
+			:validate-on-value-update="true"
+			@submit="fnSave"
+		>
+			<div class="container content grid grid-row gap-1 p-1">
+				<FormField
+					v-slot="$field"
+					name="name"
+					class="field grid grid-row gap-0_5"
+				>
+					<FloatLabel variant="in">
+						<InputText
+							id="fv-name"
+							name="name"
+							v-model="$field.value"
+							:invalid="$field.invalid"
+							variant="filled"
+							fluid
+						/>
+						<label
+							class="field-label"
+							for="fv-name"
+							>Name</label
+						>
+					</FloatLabel>
 
-				<Button
-					label="Save"
-					icon="oi oi-save"
-					severity="contrast"
-					@click="fnSave"
-				/>
+					<Message
+						v-if="$field.invalid"
+						severity="error"
+						size="small"
+						variant="simple"
+					>
+						<p>{{ $field.error?.message }}</p>
+					</Message>
+				</FormField>
+
+				<FormField
+					v-slot="$field"
+					name="url"
+					class="field grid grid-row gap-0_5"
+				>
+					<FloatLabel variant="in">
+						<InputText
+							id="fv-url"
+							name="url"
+							v-model="$field.value"
+							:invalid="$field.invalid"
+							variant="filled"
+							fluid
+						/>
+						<label
+							class="field-label"
+							for="fv-url"
+							>URL</label
+						>
+					</FloatLabel>
+
+					<Message
+						v-if="$field.invalid"
+						severity="error"
+						size="small"
+						variant="simple"
+					>
+						<p>{{ $field.error?.message }}</p>
+					</Message>
+				</FormField>
+
+				<FormField
+					v-slot="$field"
+					name="description"
+					class="field grid grid-row gap-0_5"
+				>
+					<FloatLabel variant="in">
+						<InputText
+							id="fv-description"
+							name="description"
+							v-model="$field.value"
+							:invalid="$field.invalid"
+							variant="filled"
+							fluid
+						/>
+						<label
+							class="field-label"
+							for="fv-description"
+							>Description</label
+						>
+					</FloatLabel>
+
+					<Message
+						v-if="$field.invalid"
+						severity="error"
+						size="small"
+						variant="simple"
+					>
+						<p>{{ $field.error?.message }}</p>
+					</Message>
+				</FormField>
+
+				<FormField
+					v-slot="$field"
+					name="tags"
+					class="field grid grid-row gap-0_5"
+				>
+					<FloatLabel variant="in">
+						<InputText
+							id="fv-tags"
+							name="tags"
+							v-model="$field.value"
+							:invalid="$field.invalid"
+							variant="filled"
+							fluid
+						/>
+						<label
+							class="field-label"
+							for="fv-tags"
+							>Tags</label
+						>
+					</FloatLabel>
+
+					<Message
+						v-if="$field.invalid"
+						severity="error"
+						size="small"
+						variant="simple"
+					>
+						<p>{{ $field.error?.message }}</p>
+					</Message>
+				</FormField>
+
+				<FormField
+					v-slot="$field"
+					name="groupName"
+					class="field grid grid-row gap-0_5"
+				>
+					<FloatLabel variant="in">
+						<!-- <InputText
+							id="fv-groupName"
+							name="groupName"
+							v-model="$field.value"
+							:invalid="$field.invalid"
+							variant="filled"
+							fluid
+						/> -->
+						<Select
+							id="fv-groupName"
+							name="groupName"
+							v-model="$field.value"
+							:options="groupOptionList"
+							:invalid="$field.invalid"
+							variant="filled"
+							editable
+							fluid
+						/>
+						<label
+							class="field-label"
+							for="fv-groupName"
+							>Group</label
+						>
+					</FloatLabel>
+
+					<Message
+						v-if="$field.invalid"
+						severity="error"
+						size="small"
+						variant="simple"
+					>
+						<p>{{ $field.error?.message }}</p>
+					</Message>
+				</FormField>
 			</div>
-		</div>
 
-		<div class="container content grid grid-row gap-1 padding-1">
-			<p>site-form-comp: {{ name }}</p>
-		</div>
+			<div class="container form-footer sticky-bottom">
+				<div class="container flex flex-reverse gap-1 p-1 justify-self-end">
+					<Button
+						type="submit"
+						label="Save"
+						icon="oi oi-save"
+						severity="contrast"
+					/>
+
+					<Button
+						type="button"
+						label="Cancel"
+						icon="oi oi-times"
+						severity="secondary"
+						@click="fnClose"
+					/>
+
+					<Button
+						v-if="formValues.id"
+						type="button"
+						label="Delete"
+						icon="oi oi-trash"
+						severity="danger"
+						@click="fnDelete"
+					/>
+				</div>
+			</div>
+		</Form>
 	</div>
 </template>

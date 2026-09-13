@@ -59,6 +59,10 @@ i.oi {
 	flex-wrap: wrap;
 }
 
+.flex-reverse {
+	flex-direction: row-reverse;
+}
+
 .grid {
 	display: grid;
 }
@@ -88,11 +92,18 @@ i.oi {
 	gap: 1em;
 }
 
-.padding-0_5 {
+.p-0_5 {
 	padding: 0.5em;
 }
-.padding-1 {
+.p-1 {
 	padding: 1em;
+}
+
+.mt-1 {
+	margin-top: 1em;
+}
+.mb-1 {
+	margin-bottom: 1em;
 }
 
 .place-content-center {
@@ -144,6 +155,10 @@ i.oi {
 .sticky-bottom {
 	position: sticky;
 	bottom: 0px;
+}
+.sticky-bottom-1 {
+	position: sticky;
+	bottom: 1em;
 }
 
 .dashboard {
@@ -259,6 +274,12 @@ html .btn-icon-1 {
 .dialog-custom .content {
 	grid-area: CONTENT;
 	z-index: 100;
+}
+.dialog-custom .form-footer {
+	border-width: 0px;
+	border-style: solid;
+	border-color: var(--brd-clr);
+	border-top-width: 1px;
 }
 
 @media (orientation: portrait) {

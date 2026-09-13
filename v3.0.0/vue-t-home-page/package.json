@@ -13,11 +13,13 @@
 		"format": "prettier --write --experimental-cli src/"
 	},
 	"dependencies": {
+		"@openvue/forms": "^1.0.0",
 		"@openvue/openicons": "^1.0.0",
 		"@openvue/themes": "^1.0.0",
 		"openvue": "1.0.0-rc.0",
 		"pinia": "^4.0.2",
-		"vue": "^3.5.40"
+		"vue": "^3.5.40",
+		"zod": "^4.6.2"
 	},
 	"devDependencies": {
 		"@tsconfig/node24": "^24.0.4",
