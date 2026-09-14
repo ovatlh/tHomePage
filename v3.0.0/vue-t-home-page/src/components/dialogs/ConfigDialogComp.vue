@@ -148,7 +148,6 @@ Init();
 					<Button
 						label="Import"
 						icon="oi oi-file-arrow-up"
-						severity="contrast"
 						:disabled="dbFile && !dbFile.files?.length"
 						@click="fnImportDB"
 					/>

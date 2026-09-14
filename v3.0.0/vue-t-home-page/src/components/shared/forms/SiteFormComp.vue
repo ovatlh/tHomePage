@@ -4,14 +4,14 @@ import { inject, nextTick, onMounted, ref } from "vue";
 import { z } from "zod";
 import { zodResolver } from "@openvue/forms/resolvers/zod";
 import { Form, FormField, type FormSubmitEvent } from "@openvue/forms";
-import FloatLabel from "openvue/floatlabel";
-import InputText from "openvue/inputtext";
-import Select from "openvue/select";
-import Message from "openvue/message";
 
 // Code Imported
 
 // Components
+import FloatLabel from "openvue/floatlabel";
+import InputText from "openvue/inputtext";
+import Select from "openvue/select";
+import Message from "openvue/message";
 import Button from "openvue/button";
 
 // Interfaces
@@ -30,8 +30,8 @@ const formValues = ref<any>({
 const schema = z.object({
 	name: z.string().min(1, "Required"),
 	url: z.string().min(1, "Required"),
-	description: z.string().min(0, "Required"),
-	tags: z.string().min(0, "Required"),
+	description: z.string().optional(),
+	tags: z.string().optional(),
 	groupName: z.string().min(1, "Required"),
 });
 const resolver = zodResolver(schema);
@@ -78,7 +78,7 @@ onMounted(async () => {
 <template>
 	<div class="site-form-comp dialog-custom grid grid-row">
 		<div class="container header grid grid-column gap-1 p-1 align-items-center justify-content-space-between sticky-top">
-			<p class="font-bold">Site</p>
+			<p class="font-bold">{{ formValues.id ? "Update" : "Add" }}: Site</p>
 
 			<Button
 				rounded
@@ -229,14 +229,6 @@ onMounted(async () => {
 					class="field grid grid-row gap-0_5"
 				>
 					<FloatLabel variant="in">
-						<!-- <InputText
-							id="fv-groupName"
-							name="groupName"
-							v-model="$field.value"
-							:invalid="$field.invalid"
-							variant="filled"
-							fluid
-						/> -->
 						<Select
 							id="fv-groupName"
 							name="groupName"
@@ -269,9 +261,8 @@ onMounted(async () => {
 				<div class="container flex flex-reverse gap-1 p-1 justify-self-end">
 					<Button
 						type="submit"
-						label="Save"
+						:label="formValues.id ? 'Save' : 'Create'"
 						icon="oi oi-save"
-						severity="contrast"
 					/>
 
 					<Button

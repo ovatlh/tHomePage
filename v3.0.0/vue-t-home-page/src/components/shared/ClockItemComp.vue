@@ -20,6 +20,7 @@ const hourText = ref<string>("00:00:00 x.x.");
 let intervalRef: any;
 
 // Emits
+const emits = defineEmits(["btnActionClicked"]);
 
 // Code
 function ClearInterval() {
@@ -51,7 +52,7 @@ onBeforeUnmount(() => {
 		<Button
 			class="btn-config btn-icon-1"
 			icon="oi oi-cog"
-			severity="contrast"
+			@click="emits('btnActionClicked')"
 		/>
 	</div>
 </template>

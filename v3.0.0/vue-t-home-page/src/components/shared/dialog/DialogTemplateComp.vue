@@ -77,7 +77,6 @@ onMounted(() => {
 				<Button
 					label="Save"
 					icon="oi oi-save"
-					severity="contrast"
 					@click="fnSave"
 				/>
 			</div>

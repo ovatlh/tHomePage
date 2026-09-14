@@ -19,6 +19,7 @@ import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
 import ClockItemComp from "@/components/shared/ClockItemComp.vue";
 import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";
 import ConfigDialogComp from "@/components/dialogs/ConfigDialogComp.vue";
+import ClockFormComp from "./components/shared/forms/ClockFormComp.vue";
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";
@@ -41,6 +42,56 @@ const dialog = useDialog();
 // Emits
 
 // Code
+async function fnShowFormClock(id?: number) {
+	let formValues: any = {
+		name: "",
+		utc: undefined,
+		isFormat24H: false,
+	};
+	if (id) {
+		const dbItem = (await indexedDBUtils.fnReadByPKAsync(DB_SCHEMA.tableDefinition.CLOCK.name, id)) as MClock;
+		if (dbItem) {
+			formValues = { ...dbItem };
+		}
+	}
+	dialog.open(ClockFormComp, {
+		props: {
+			modal: true,
+			dismissableMask: true,
+			showHeader: false,
+			style: {
+				maxHeight: "100%",
+				overflow: "hidden",
+			},
+			contentProps: {
+				style: {
+					padding: "0px",
+					position: "relative",
+				},
+			},
+		},
+		data: {
+			formValues: formValues,
+		},
+		onClose: async (e: any) => {
+			if (e.data?.form) {
+				if (e.data.form?.id) {
+					await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+				} else {
+					await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+				}
+				await fnLoadClockList();
+			}
+		},
+		emits: {
+			onBtnDeleted: async (e: any) => {
+				await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.CLOCK.name, e);
+				await fnLoadClockList();
+			},
+		},
+	});
+}
+
 function fnShowConfigDialog() {
 	dialog.open(ConfigDialogComp, {
 		props: {
@@ -214,7 +265,7 @@ Init();
 
 			<Button
 				icon="oi oi-plus"
-				severity="contrast"
+				@click="fnShowFormClock()"
 			/>
 		</div>
 
@@ -230,19 +281,18 @@ Init();
 				v-for="(itemClock, indexClock) in clockList"
 				:key="indexClock + 'clock'"
 				:data="itemClock"
+				@btn-action-clicked="fnShowFormClock(itemClock.id)"
 			/>
 		</div>
 
 		<div class="container site-settings grid grid-column grid-column-auto-auto-1-auto gap-1 p-1 align-items-center">
 			<Button
 				icon="oi oi-cog"
-				severity="contrast"
 				@click="fnShowConfigDialog"
 			/>
 
 			<Button
 				:icon="siteOpenMode == 'same-tab' ? 'oi oi-window-maximize' : 'oi oi-external-link'"
-				severity="contrast"
 				:title="siteTitleOpenMode"
 				@click="fnToggleSiteOpenMode"
 			/>
@@ -262,7 +312,6 @@ Init();
 
 			<Button
 				icon="oi oi-plus"
-				severity="contrast"
 				@click="fnShowFormSite()"
 			/>
 		</div>
@@ -293,30 +342,6 @@ Init();
 				</div>
 			</div>
 		</div>
-
-		<!-- <form class="container site-settings">
-			<div class="container grid grid-row gap-0_5">
-				<label for="dbimport">Import db:</label>
-				<input
-					type="file"
-					id="dbimport"
-					accept=".json"
-				/>
-				<button
-					type="button"
-					@click="fnImportDB"
-				>
-					Import
-				</button>
-
-				<button
-					type="button"
-					@click="fnExportDB"
-				>
-					Export
-				</button>
-			</div>
-		</form> -->
 
 		<DynamicDialog />
 		<Toast />

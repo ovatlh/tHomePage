@@ -54,3 +54,7 @@ https://github.com/openvi-foundation/deni/blob/main/src/views/forms/FormValidati
 
 https://deni.openvue.dev/products > btn{New product}
 https://github.com/openvi-foundation/deni/blob/1199af527752da01dbddb7fca886b72ea3077c57/src/components/ProductFormDialog.vue
+
+https://zod.dev/basics
+
+https://openvue.dev/theming/styled/#primary

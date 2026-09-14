@@ -44,7 +44,6 @@ const emits = defineEmits(["btnActionClicked"]);
 		<Button
 			class="btn-config btn-icon-1"
 			icon="oi oi-cog"
-			severity="contrast"
 			@click="emits('btnActionClicked')"
 		/>
 	</div>
