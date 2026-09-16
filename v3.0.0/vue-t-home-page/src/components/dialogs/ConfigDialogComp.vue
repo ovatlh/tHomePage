@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Libs Imported
-import { inject, ref } from "vue";
-import { useToast } from "openvue/usetoast";
+import { defineAsyncComponent, inject, ref } from "vue";
+import { useToast } from "openvue";
 
 // Code Imported
 import indexedDBUtils from "@/utils/indexedDB.utils";
@@ -10,10 +10,10 @@ import { fnDownloadJSON } from "@/utils/json.utils";
 import { fnSetHTMLThemeClass } from "@/utils/html.utils";
 
 // Components
-import Button from "openvue/button";
-import Fieldset from "openvue/fieldset";
-import FileUpload from "openvue/fileupload";
-import SelectButton from "openvue/selectbutton";
+const Button = defineAsyncComponent(() => import("openvue/button"));
+const Fieldset = defineAsyncComponent(() => import("openvue/fieldset"));
+const FileUpload = defineAsyncComponent(() => import("openvue/fileupload"));
+const SelectButton = defineAsyncComponent(() => import("openvue/selectbutton"));
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";

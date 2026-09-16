@@ -1,20 +1,22 @@
 <script setup lang="ts">
 // Libs Imported
-import { inject, nextTick, onMounted, ref } from "vue";
+import { defineAsyncComponent, inject, nextTick, onMounted, ref } from "vue";
 import { z } from "zod";
 import { zodResolver } from "@openvue/forms/resolvers/zod";
-import { Form, FormField, type FormSubmitEvent } from "@openvue/forms";
 
 // Code Imported
+const Form = defineAsyncComponent(() => import("@openvue/forms/form"));
+const FormField = defineAsyncComponent(() => import("@openvue/forms/formfield"));
+const Button = defineAsyncComponent(() => import("openvue/button"));
+const FloatLabel = defineAsyncComponent(() => import("openvue/floatlabel"));
+const InputText = defineAsyncComponent(() => import("openvue/inputtext"));
+const Message = defineAsyncComponent(() => import("openvue/message"));
+const Select = defineAsyncComponent(() => import("openvue/select"));
 
 // Components
-import FloatLabel from "openvue/floatlabel";
-import InputText from "openvue/inputtext";
-import Select from "openvue/select";
-import Message from "openvue/message";
-import Button from "openvue/button";
 
 // Interfaces
+import type { FormSubmitEvent } from "@openvue/forms";
 
 // Props
 const dialogRef = inject("dialogRef") as any;

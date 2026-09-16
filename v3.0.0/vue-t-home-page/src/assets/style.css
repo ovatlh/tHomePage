@@ -280,6 +280,7 @@ html .btn-icon-1 {
 	border-style: solid;
 	border-color: var(--brd-clr);
 	border-top-width: 1px;
+	background-color: var(--p-dialog-background);
 }
 
 @media (orientation: portrait) {

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 // Libs Imported
+import { defineAsyncComponent } from "vue";
 
 // Code Imported
 import { fnGetURLIconSite } from "@/utils/site.utils";
+import { fnStringListToString } from "@/utils/string.utils";
 
 // Components
-import Button from "openvue/button";
+const Button = defineAsyncComponent(() => import("openvue/button"));
 
 // Interfaces
 import type { MSite } from "@/models/MSite";
-import { fnStringListToString } from "@/utils/string.utils";
 interface Props {
 	data: MSite;
 	openMode?: string;

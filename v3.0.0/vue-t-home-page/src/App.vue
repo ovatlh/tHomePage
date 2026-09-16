@@ -1,32 +1,32 @@
 <script setup lang="ts">
 // Libs Imported
-import { ref } from "vue";
-import { useDialog } from "openvue/usedialog";
+import { ref, defineAsyncComponent } from "vue";
+import { useDialog, useToast } from "openvue";
 
 // Code Imported
 import DB_SCHEMA from "@/database/database.schema";
 import indexedDBUtils from "@/utils/indexedDB.utils";
 import { fnArrayToGroupArrayByProperty, fnSortByProperty } from "@/utils/array.utils";
-import { fnDebounce } from "./utils/form.utils";
+import { fnDebounce } from "@/utils/form.utils";
+import { fnSetHTMLThemeClass } from "@/utils/html.utils";
 
 // Components
-import Button from "openvue/button";
-import InputText from "openvue/inputtext";
-import FloatLabel from "openvue/floatlabel";
-import DynamicDialog from "openvue/dynamicdialog";
-import Toast from "openvue/toast";
+const Button = defineAsyncComponent(() => import("openvue/button"));
+const InputText = defineAsyncComponent(() => import("openvue/inputtext"));
+const FloatLabel = defineAsyncComponent(() => import("openvue/floatlabel"));
+const DynamicDialog = defineAsyncComponent(() => import("openvue/dynamicdialog"));
+const Toast = defineAsyncComponent(() => import("openvue/toast"));
 import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
 import ClockItemComp from "@/components/shared/ClockItemComp.vue";
 import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";
 import ConfigDialogComp from "@/components/dialogs/ConfigDialogComp.vue";
-import ClockFormComp from "./components/shared/forms/ClockFormComp.vue";
+import ClockFormComp from "@/components/shared/forms/ClockFormComp.vue";
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";
 import type { MClock } from "@/models/MClock";
 import type { MSite } from "@/models/MSite";
 import type { IGroupSite } from "@/interfaces/IGroupSite.ts";
-import { fnSetHTMLThemeClass } from "./utils/html.utils";
 
 // Props
 let configItem: MConfig | undefined;
@@ -38,6 +38,7 @@ const siteTitleOpenMode = ref<string>("Same tab");
 const siteFilterText = ref<string>("");
 const clockFilterText = ref<string>("");
 const dialog = useDialog();
+const toast = useToast();
 
 // Emits
 
@@ -76,16 +77,46 @@ async function fnShowFormClock(id?: number) {
 		onClose: async (e: any) => {
 			if (e.data?.form) {
 				if (e.data.form?.id) {
-					await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+					try {
+						await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+						toast.add({
+							severity: "success",
+							closable: true,
+							life: 1000 * 3,
+							summary: "Clock updated!",
+						});
+					} catch (error) {
+						console.error(error);
+					}
 				} else {
-					await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+					try {
+						await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.CLOCK.name, { ...e.data.form });
+						toast.add({
+							severity: "success",
+							closable: true,
+							life: 1000 * 3,
+							summary: "Clock created!",
+						});
+					} catch (error) {
+						console.error(error);
+					}
 				}
 				await fnLoadClockList();
 			}
 		},
 		emits: {
 			onBtnDeleted: async (e: any) => {
-				await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.CLOCK.name, e);
+				try {
+					await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.CLOCK.name, e);
+					toast.add({
+						severity: "success",
+						closable: true,
+						life: 1000 * 3,
+						summary: "Clock deleted!",
+					});
+				} catch (error) {
+					console.error(error);
+				}
 				await fnLoadClockList();
 			},
 		},
@@ -155,16 +186,46 @@ async function fnShowFormSite(id?: number) {
 		onClose: async (e: any) => {
 			if (e.data?.form) {
 				if (e.data.form?.id) {
-					await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+					try {
+						await indexedDBUtils.fnUpdateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+						toast.add({
+							severity: "success",
+							closable: true,
+							life: 1000 * 3,
+							summary: "Site updated!",
+						});
+					} catch (error) {
+						console.error(error);
+					}
 				} else {
-					await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+					try {
+						await indexedDBUtils.fnCreateAsync(DB_SCHEMA.tableDefinition.SITE.name, { ...e.data.form });
+						toast.add({
+							severity: "success",
+							closable: true,
+							life: 1000 * 3,
+							summary: "Site created!",
+						});
+					} catch (error) {
+						console.error(error);
+					}
 				}
 				await fnLoadSiteList();
 			}
 		},
 		emits: {
 			onBtnDeleted: async (e: any) => {
-				await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, e);
+				try {
+					await indexedDBUtils.fnDeleteByPKAsync(DB_SCHEMA.tableDefinition.SITE.name, e);
+					toast.add({
+						severity: "success",
+						closable: true,
+						life: 1000 * 3,
+						summary: "Site deleted!",
+					});
+				} catch (error) {
+					console.error(error);
+				}
 				await fnLoadSiteList();
 			},
 		},

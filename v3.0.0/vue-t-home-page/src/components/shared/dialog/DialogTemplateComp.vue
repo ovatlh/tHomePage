@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // Libs Imported
-import { inject, nextTick, onMounted, ref } from "vue";
+import { defineAsyncComponent, inject, nextTick, onMounted, ref } from "vue";
 
 // Code Imported
 
 // Components
-import Button from "openvue/button";
+const Button = defineAsyncComponent(() => import("openvue/button"));
 
 // Interfaces
 
