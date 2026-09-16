@@ -154,6 +154,17 @@ Init();
 				</div>
 			</Fieldset>
 
+			<Fieldset legend="About">
+				<div class="grid grid-row">
+					<a
+						class="text-center"
+						href="https://github.com/ovatlh/tHomePage"
+						target="_blank"
+						>Github repo: tHomePage</a
+					>
+				</div>
+			</Fieldset>
+
 			<Fieldset legend="Theme">
 				<SelectButton
 					fluid
