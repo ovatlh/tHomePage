@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Libs Imported
-import { ref, defineAsyncComponent } from "vue";
+import { ref } from "vue";
 import { useDialog, useToast } from "openvue";
 
 // Code Imported
@@ -11,11 +11,6 @@ import { fnDebounce } from "@/utils/form.utils";
 import { fnSetHTMLThemeClass } from "@/utils/html.utils";
 
 // Components
-const Button = defineAsyncComponent(() => import("openvue/button"));
-const InputText = defineAsyncComponent(() => import("openvue/inputtext"));
-const FloatLabel = defineAsyncComponent(() => import("openvue/floatlabel"));
-const DynamicDialog = defineAsyncComponent(() => import("openvue/dynamicdialog"));
-const Toast = defineAsyncComponent(() => import("openvue/toast"));
 import SiteLinkComp from "@/components/shared/SiteLinkComp.vue";
 import ClockItemComp from "@/components/shared/ClockItemComp.vue";
 import SiteFormComp from "@/components/shared/forms/SiteFormComp.vue";

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 // Libs Imported
-import { defineAsyncComponent, onBeforeUnmount, ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 
 // Code Imported
 import { fnGetHourFormatedWithUTC } from "@/utils/datetime.utils";
 
 // Components
-const Button = defineAsyncComponent(() => import("openvue/button"));
 
 // Interfaces
 import type { MClock } from "@/models/MClock";

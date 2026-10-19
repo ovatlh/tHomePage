@@ -1,20 +1,12 @@
 <script setup lang="ts">
 // Libs Imported
-import { defineAsyncComponent, inject, nextTick, onMounted, ref } from "vue";
+import { inject, nextTick, onMounted, ref } from "vue";
 import { z } from "zod";
 import { zodResolver } from "@openvue/forms/resolvers/zod";
 
 // Code Imported
 
 // Components
-const Form = defineAsyncComponent(() => import("@openvue/forms/form"));
-const FormField = defineAsyncComponent(() => import("@openvue/forms/formfield"));
-const Button = defineAsyncComponent(() => import("openvue/button"));
-const FloatLabel = defineAsyncComponent(() => import("openvue/floatlabel"));
-const InputText = defineAsyncComponent(() => import("openvue/inputtext"));
-const Message = defineAsyncComponent(() => import("openvue/message"));
-const InputNumber = defineAsyncComponent(() => import("openvue/inputnumber"));
-const Checkbox = defineAsyncComponent(() => import("openvue/checkbox"));
 
 // Interfaces
 import type { FormSubmitEvent } from "@openvue/forms";

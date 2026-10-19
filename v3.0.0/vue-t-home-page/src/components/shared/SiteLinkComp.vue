@@ -7,7 +7,6 @@ import { fnGetURLIconSite } from "@/utils/site.utils";
 import { fnStringListToString } from "@/utils/string.utils";
 
 // Components
-const Button = defineAsyncComponent(() => import("openvue/button"));
 
 // Interfaces
 import type { MSite } from "@/models/MSite";

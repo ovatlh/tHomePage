@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Libs Imported
-import { defineAsyncComponent, inject, ref } from "vue";
+import { inject, ref } from "vue";
 import { useToast } from "openvue";
 
 // Code Imported
@@ -10,10 +10,6 @@ import { fnDownloadJSON } from "@/utils/json.utils";
 import { fnSetHTMLThemeClass } from "@/utils/html.utils";
 
 // Components
-const Button = defineAsyncComponent(() => import("openvue/button"));
-const Fieldset = defineAsyncComponent(() => import("openvue/fieldset"));
-const FileUpload = defineAsyncComponent(() => import("openvue/fileupload"));
-const SelectButton = defineAsyncComponent(() => import("openvue/selectbutton"));
 
 // Interfaces
 import type { MConfig } from "@/models/MConfig";
